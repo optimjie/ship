@@ -22,7 +22,6 @@ environment:
 
 dependencies:
   dynamic_treeview: 1.0.0+2
-  # list_treeview: ^0.3.0
   flutter:
     sdk: flutter
 
