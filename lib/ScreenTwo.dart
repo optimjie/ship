@@ -22,10 +22,10 @@ class ScreenTwo extends StatelessWidget {
               "PARENT-ID ${data['parent_id']}",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            Text(
-              "EXTRAS: ${data['extra']}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+            // Text(
+            //   "EXTRAS: ${data['extra']}",
+            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            // ),
           ],
         ),
       ),
