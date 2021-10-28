@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:ship/model/tree.dart';
+import 'package:ship/model/Tree.dart';
 
 class ShipDatabase {
   static final ShipDatabase instance = ShipDatabase._init();
@@ -35,9 +35,10 @@ class ShipDatabase {
     await db.execute('''
       CREATE TABLE $tableTree ( 
         ${TreeFields.id} $idType, 
-        ${TreeFields.parentId} $integerType,
+        ${TreeFields.treeid} $textType,
+        ${TreeFields.treepid} $textType,
         ${TreeFields.name} $textType,
-        ${TreeFields.extras} $textType
+        ${TreeFields.shipname} $textType
         )
       ''');
   }
