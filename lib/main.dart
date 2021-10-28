@@ -7,6 +7,8 @@ import 'package:dynamic_treeview/dynamic_treeview.dart';
 
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
+import 'package:ship/widget/Login.dart';
+import 'package:ship/widget/Query.dart';
 
 import 'model/TreeModel.dart';
 
@@ -81,49 +83,73 @@ class _MyHomePageState extends State<MyHomePage> {
           title: title,
           extras: Map<String, dynamic>()));
     }
+
+    print("len:" + treeListShow.length.toString());
+    for (int i = 0; i < treeListShow.length; i++) {
+      print(treeListShow[i].getId() + " " +
+            treeListShow[i].getParentId() + " " +
+            treeListShow[i].getTitle() + " " + 
+            treeListShow[i].getExtraData().toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("xx系统"),
-        ),
-        drawer: Container(
-          height: MediaQuery.of(context).size.height,
-          child: DynamicTreeView(
-            data: treeListShow,
-            config: Config(
-                parentTextStyle:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-                parentPaddingEdgeInsets:
-                    EdgeInsets.only(left: 16, top: 0, bottom: 0)),
-            width: 220.0,
-            onTap: (m) {
-              print("onChildTap -> $m");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => ScreenTwo(
-                            data: m,
-                          )));
-            },
-          ),
-          color: Colors.white,
-        ),
-        body: Column(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (ctx) => ScreenOne()));
-              },
-              child: Text('Full Screen TreeView'),
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("登录"),
+        elevation: 10.0,
+        centerTitle: true,
       ),
+      // body: Login(),
+      body: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (ctx) => Query(
+                    treeListShow: this.treeListShow)));
+            },
+            child: Text("提交"),
+          )
     );
+    // return SafeArea(
+    //   child: Scaffold(
+    //     appBar: AppBar(
+    //       title: Text("xx系统"),
+    //     ),
+    //     drawer: Container(
+    //       height: MediaQuery.of(context).size.height,
+    //       child: DynamicTreeView(
+    //         data: treeListShow,
+    //         config: Config(
+    //             parentTextStyle:
+    //                 TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+    //             parentPaddingEdgeInsets:
+    //                 EdgeInsets.only(left: 16, top: 0, bottom: 0)),
+    //         width: 220.0,
+    //         onTap: (m) {
+    //           print("onChildTap -> $m");
+    //           Navigator.push(
+    //               context,
+    //               MaterialPageRoute(
+    //                   builder: (ctx) => ScreenTwo(
+    //                         data: m,
+    //                       )));
+    //         },
+    //       ),
+    //       color: Colors.white,
+    //     ),
+    //     body: Column(
+    //       children: <Widget>[
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             Navigator.push(
+    //                 context, MaterialPageRoute(builder: (ctx) => ScreenOne()));
+    //           },
+    //           child: Text('Full Screen TreeView'),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

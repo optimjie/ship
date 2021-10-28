@@ -10,13 +10,11 @@ class ScreenOne extends StatefulWidget {
 }
 
 class _ScreenOneState extends State<ScreenOne> {
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Screen One"),
-        ),
         body: DynamicTreeView(
           data: getData(),
           config: Config(
