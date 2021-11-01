@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ship/widget/FieldQuery.dart';
 
 import 'FieldQuery.dart';
+import 'Settings.dart';
 
 class Query extends StatelessWidget {
 
@@ -21,6 +22,14 @@ class Query extends StatelessWidget {
       body: Center(
         child: Column (
           children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (ctx) => Settings(treeListShow: this.treeListShow))
+                );
+              },
+              child: Text('设置'),
+            ),
             ElevatedButton(
               onPressed: () {},
               child: Text('台账查询'),

@@ -2,7 +2,6 @@ import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
-import 'package:ship/model/TreeModel.dart';
 
 import '../DataModel.dart';
 import '../ScreenTwo.dart';

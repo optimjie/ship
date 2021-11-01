@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:ship/model/Tree.dart';
+import 'package:ship/model/User.dart';
 
 class ShipDatabase {
   static final ShipDatabase instance = ShipDatabase._init();
@@ -32,6 +33,7 @@ class ShipDatabase {
     final textType = 'TEXT NOT NULL';
     final integerType = 'INTEGER NOT NULL';
 
+    // 创建tree表
     await db.execute('''
       CREATE TABLE $tableTree ( 
         ${TreeFields.id} $idType, 
@@ -39,17 +41,55 @@ class ShipDatabase {
         ${TreeFields.treepid} $textType,
         ${TreeFields.name} $textType,
         ${TreeFields.shipname} $textType
-        )
-      ''');
+      )
+    ''');
+
+    // 创建user表
+    await db.execute('''
+      CREATE TABLE $tableUser ( 
+        ${UserFields.id} $idType, 
+        ${UserFields.name} $textType,
+        ${UserFields.password} $textType,
+        ${UserFields.level} $textType
+      )
+    ''');
   }
 
-  Future<Tree> create(Tree note) async {
+
+  // User =========================
+  Future<User> userInsert(User user) async {
     final db = await instance.database;
-    final id = await db.insert(tableTree, note.toJson());
-    return note.copy(id: id);
+    final id = await db.insert(tableUser, user.toJson());
+    return user.copy(id: id);
   }
 
-  Future<Tree> readNote(int id) async {
+  Future<List<User>> userQueryAll() async {
+    final db = await instance.database;
+    final result = await db.query(tableUser);
+    return result.map((json) => User.fromJson(json)).toList();
+  }
+
+  // Tree =========================
+
+  Future<List<Tree>> treeGetCnt(String treeid) async {
+    final db = await instance.database;
+    final result = await db.query(
+      tableTree,
+      columns: TreeFields.values,
+      where: '${TreeFields.treeid} like ?',
+      whereArgs: [treeid],
+    );
+    // print("In treeGetCnt --- getCnt:" + maps.length.toString());
+    return result.map((json) => Tree.fromJson(json)).toList();
+  }
+
+  Future<Tree> treeInsert(Tree tree) async {
+    final db = await instance.database;
+    final id = await db.insert(tableTree, tree.toJson());
+    return tree.copy(id: id);
+  }
+
+  Future<Tree> treeQueryById(int id) async {
     final db = await instance.database;
 
     final maps = await db.query(
@@ -66,15 +106,13 @@ class ShipDatabase {
     }
   }
 
-  Future<List<Tree>> readAllNotes() async {
+  Future<List<Tree>> treeQueryAll() async {
     final db = await instance.database;
-
     final result = await db.query(tableTree);
-
     return result.map((json) => Tree.fromJson(json)).toList();
   }
 
-  Future<int> update(Tree note) async {
+  Future<int> treeUpdate(Tree note) async {
     final db = await instance.database;
 
     return db.update(
@@ -85,7 +123,7 @@ class ShipDatabase {
     );
   }
 
-  Future<int> delete(int id) async {
+  Future<int> treeDelete(int id) async {
     final db = await instance.database;
 
     return await db.delete(

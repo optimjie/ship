@@ -1,10 +1,8 @@
+import 'package:dynamic_treeview/dynamic_treeview.dart';
+
 final String tableTree = 'tree';
 
 class TreeFields {
-  // required this.id,
-  // required this.parentId,
-  // required this.name,
-  // required this.extras
 
   static final List<String> values = [
     /// Add all fields
@@ -19,19 +17,20 @@ class TreeFields {
   static final String shipname = 'shipname';
 }
 
-class Tree {
+class Tree extends BaseData {
   final int? id;
   final String treeid;
   final String treepid;
   final String name;
   final String shipname;
 
-  const Tree(
-      {this.id,
-      required this.treeid,
-      required this.treepid,
-      required this.name,
-      required this.shipname});
+  Tree({
+    this.id,
+    required this.treeid,
+    required this.treepid,
+    required this.name,
+    required this.shipname
+  });
   Tree copy({
     int? id,
     String? treeid,
@@ -39,51 +38,53 @@ class Tree {
     String? name,
     String? shipname,
   }) =>
-      Tree(
-          id: id ?? this.id,
-          treeid: treeid ?? this.treeid,
-          treepid: treepid ?? this.treeid,
-          name: name ?? this.name,
-          shipname: shipname ?? this.shipname);
+    Tree(
+      id: id ?? this.id,
+      treeid: treeid ?? this.treeid,
+      treepid: treepid ?? this.treeid,
+      name: name ?? this.name,
+      shipname: shipname ?? this.shipname
+    );
   static Tree fromJson(Map<String, Object?> json) => Tree(
-        id: json[TreeFields.id] as int?,
-        treeid: json[TreeFields.treeid] as String,
-        treepid: json[TreeFields.treepid] as String,
-        name: json[TreeFields.name] as String,
-        shipname: json[TreeFields.shipname] as String,
-      );
+    id: json[TreeFields.id] as int?,
+    treeid: json[TreeFields.treeid] as String,
+    treepid: json[TreeFields.treepid] as String,
+    name: json[TreeFields.name] as String,
+    shipname: json[TreeFields.shipname] as String,
+  );
   Map<String, Object?> toJson() => {
-        TreeFields.id: id,
-        TreeFields.treeid: treeid,
-        TreeFields.treepid: treepid,
-        TreeFields.name: name,
-        TreeFields.shipname: shipname,
-      };
+    TreeFields.id: id,
+    TreeFields.treeid: treeid,
+    TreeFields.treepid: treepid,
+    TreeFields.name: name,
+    TreeFields.shipname: shipname,
+  };
+
+  @override
+  Map<String, dynamic> getExtraData() {
+    return new Map<String, dynamic>();
+  }
+
+  @override
   String getId() {
-    return this.id.toString();
+    return treeid;
   }
 
-  String getTreeid() {
-    return this.treeid.toString();
+  @override
+  String getParentId() {
+    return treepid;
   }
 
-  String getTreepid() {
-    return this.treepid.toString();
-  }
-
-  String getName() {
-    return this.name;
-  }
-
-  String getShipname() {
-    return this.shipname;
+  @override
+  String getTitle() {
+    return name;
   }
 }
 
 // 测试数据
-List<Tree> createTmpTreeModelData() {
+List<Tree> createTmpTreeData() {
   return [
-    /**
+    /*
       1, '01', '-1', '胜利503船', '胜利503船');
       2, '011', '01', '机舱', '胜利503船');
       3, '012', '01', '甲板', '胜利503船');
@@ -99,18 +100,30 @@ List<Tree> createTmpTreeModelData() {
     // Tree(id: 2, treeid: "2", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
     // Tree(id: 3, treeid: "3", treepid: "2", name: "机舱", shipname: "胜利503船"),
     // Tree(id: 4, treeid: "4", treepid: "3", name: "甲板", shipname: "胜利503船"),
+    // Tree(id: 1, treeid: "1", treepid: "-1", name: "root", shipname: "root"),
+    // Tree(id: 2, treeid: "01", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
+    // Tree(id: 3, treeid: "011", treepid: "01", name: "机舱", shipname: "胜利503船"),
+    // Tree(id: 4, treeid: "012", treepid: "01", name: "甲板", shipname: "胜利503船"),
+    // Tree(id: 5, treeid: "0001", treepid: "011", name: "机舱气瓶本体", shipname: "胜利503船"),
+    // Tree(id: 6, treeid: "0002", treepid: "011", name: "机舱二号气瓶", shipname: "胜利503船"),
+    // Tree(id: 7, treeid: "0003", treepid: "011", name: "机舱杂用气瓶", shipname: "胜利503船"),
+    // Tree(id: 8, treeid: "0004", treepid: "011", name: "机舱一号气瓶", shipname: "胜利503船"),
+    // Tree(id: 9, treeid: "0005", treepid: "011", name: "机舱电汽热水柜", shipname: "胜利503船"),
+    // Tree(id: 10, treeid: "0006", treepid: "011", name: "机舱海水柜", shipname: "胜利503船"),
 
     Tree(id: 1, treeid: "1", treepid: "-1", name: "root", shipname: "root"),
-    Tree(id: 2, treeid: "01", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
-    Tree(id: 3, treeid: "011", treepid: "01", name: "机舱", shipname: "胜利503船"),
-    Tree(id: 4, treeid: "012", treepid: "01", name: "甲板", shipname: "胜利503船"),
-    Tree(id: 5, treeid: "0001", treepid: "011", name: "机舱气瓶本体", shipname: "胜利503船"),
-    Tree(id: 6, treeid: "0002", treepid: "011", name: "机舱二号气瓶", shipname: "胜利503船"),
-    Tree(id: 7, treeid: "0003", treepid: "011", name: "机舱杂用气瓶", shipname: "胜利503船"),
-    Tree(id: 8, treeid: "0004", treepid: "011", name: "机舱一号气瓶", shipname: "胜利503船"),
-    Tree(id: 9, treeid: "0005", treepid: "011", name: "机舱电汽热水柜", shipname: "胜利503船"),
-    Tree(id: 10, treeid: "0006", treepid: "011", name: "机舱海水柜", shipname: "胜利503船"),
-    /**
+    Tree(id: 2, treeid: "050300000", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
+    Tree(id: 3, treeid: "050310000", treepid: "050300000", name: "机舱", shipname: "胜利503船"),
+    Tree(id: 4, treeid: "050310001", treepid: "050300000", name: "甲板", shipname: "胜利503船"),
+    Tree(id: 5, treeid: "050320000", treepid: "050310000", name: "机舱气瓶本体", shipname: "胜利503船"),
+    Tree(id: 6, treeid: "050320001", treepid: "050310000", name: "机舱二号气瓶", shipname: "胜利503船"),
+    Tree(id: 7, treeid: "050320002", treepid: "050310000", name: "机舱杂用气瓶", shipname: "胜利503船"),
+    Tree(id: 8, treeid: "050320003", treepid: "050310000", name: "机舱一号气瓶", shipname: "胜利503船"),
+    Tree(id: 9, treeid: "050320004", treepid: "050310000", name: "机舱电汽热水柜", shipname: "胜利503船"),
+    Tree(id: 10, treeid: "050320005", treepid: "050310000", name: "机舱海水柜", shipname: "胜利503船"),
+
+
+    /*
       INSERT INTO Tree (_id, ID, PID, NAME, shipname) VALUES (54, '01', '-1', '船舶中心', '船舶中心');
       INSERT INTO Tree (_id, ID, PID, NAME, shipname) VALUES (55, '011', '01', '技术保障站', '船舶中心');
       INSERT INTO Tree (_id, ID, PID, NAME, shipname) VALUES (56, '012', '01', 'ACM-3LP喷砂机', '船舶中心');

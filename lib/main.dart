@@ -7,10 +7,8 @@ import 'package:dynamic_treeview/dynamic_treeview.dart';
 
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
-import 'package:ship/widget/Login.dart';
+import 'package:ship/model/User.dart';
 import 'package:ship/widget/Query.dart';
-
-import 'model/TreeModel.dart';
 
 // nox_adb.exe connect 127.0.0.1:62001
 // flutter run --no-sound-null-safety
@@ -42,9 +40,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   late List<Tree> trees;
   bool isLoading = false;
   List<BaseData> treeListShow = [];
+
+  late List<User> users;
+
+  GlobalKey _key = GlobalKey<FormState>();
+  TextEditingController _user = TextEditingController();
+  TextEditingController _pass = TextEditingController();
+  FocusNode _u = FocusNode();
+  FocusNode _p = FocusNode();
 
   @override
   void initState() {
@@ -56,100 +63,171 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     ShipDatabase.instance.close();
     super.dispose();
+
+    _user.dispose();
+    _pass.dispose();
+    _u.dispose();
+    _p.dispose();
   }
 
   Future refreshTrees() async {
-    this.trees = createTmpTreeModelData();
+
+    // this.trees = createTmpTreeData();  // 只有第一次需要
+
     // 将测试数据存到数据库中
+
+    // await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
+
     // for (int i = 0; i < trees.length; i++) {
-    //   dynamic treeid = trees[i].getTreeid();
-    //   dynamic treepid = trees[i].getTreepid();
+    //   dynamic treeid = trees[i].getId();
+    //   dynamic treepid = trees[i].getParentId();
     //   dynamic name = trees[i].name;
     //   dynamic shipname = trees[i].shipname;
     //   Tree t = Tree(
-    //       treeid: treeid, treepid: treepid, name: name, shipname: shipname);
-    //   await ShipDatabase.instance.create(t);
+    //     treeid: treeid, treepid: treepid, name: name, shipname: shipname);
+    //   await ShipDatabase.instance.treeInsert(t);
     // }
 
-    this.trees = await ShipDatabase.instance.readAllNotes();
+    this.trees = await ShipDatabase.instance.treeQueryAll();
+    this.users = await ShipDatabase.instance.userQueryAll();
 
-    for (int i = 0; i < trees.length; i++) {
-      String id = trees[i].getTreeid();
-      String parentId = trees[i].getTreepid();
-      String title = trees[i].getName();
-      this.treeListShow.add(TreeModel(
-          id: id,
-          parentId: parentId,
-          title: title,
-          extras: Map<String, dynamic>()));
+    List<Tree> t = await ShipDatabase.instance.treeGetCnt("05032%");
+    print("treeGetCnt len:" + t.length.toString());
+
+    print("users len:" + users.length.toString());
+    for (int i = 0; i < users.length; i++) {
+      print(users[i].id.toString() + " " + 
+            users[i].name + " " +
+            users[i].password + " " + 
+            users[i].level);
     }
 
-    print("len:" + treeListShow.length.toString());
+    for (int i = 0; i < trees.length; i++) {
+      String id = trees[i].getId();
+      String parentId = trees[i].getParentId();
+      String title = trees[i].getTitle();
+      this.treeListShow.add(Tree(treeid: id, treepid: parentId, name: title, shipname: "shipname"));
+    }
+
+    print("trees len:" + treeListShow.length.toString());
     for (int i = 0; i < treeListShow.length; i++) {
       print(treeListShow[i].getId() + " " +
-            treeListShow[i].getParentId() + " " +
-            treeListShow[i].getTitle() + " " + 
-            treeListShow[i].getExtraData().toString());
+        treeListShow[i].getParentId() + " " +
+        treeListShow[i].getTitle() + " " + 
+        treeListShow[i].getExtraData().toString()
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final login = Form(
+      key: _key,
+      child: Column(
+        children: [
+          TextFormField(
+            autofocus: true,
+            focusNode: _u,
+            controller: _user,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.add),
+              labelText: "账号",
+              hintText: "请输入账号",
+            ),
+            validator: (v) {
+              if (v == null || v.isEmpty) {
+                return "账号必须输入！";
+              }
+            },
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (v) {
+              print(_user.text);
+              print("object");
+            },
+          ),
+          SizedBox(height: 8),
+          TextFormField(
+            focusNode: _p,
+            controller: _pass,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.add),
+              labelText: "密码",
+              hintText: "请输入密码",
+            ),
+            validator: (v) {
+              if (v == null || v.length < 5) {
+                return "密码必须输入且大于5";
+              }
+            },
+            textInputAction: TextInputAction.send,
+            obscureText: true,
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(
+
+            onPressed: () {
+              bool userIsExist = false;
+              bool passwdIsCorrect = false;
+              for (int i = 0; i < users.length; i++) {
+                if (_user.text.toString() == users[i].name) {
+                  userIsExist = true;
+                  if (_pass.text.toString() == users[i].password) {
+                    passwdIsCorrect = true;
+                  }
+                }
+              }
+
+              String hint = "";
+              if (!userIsExist) {
+                hint = "用户不存在";
+              } else if (!passwdIsCorrect) {
+                hint = "密码错误";
+              }
+
+              if (!userIsExist || !passwdIsCorrect) {
+                //弹窗提示
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(hint),
+                      // content: Text(''),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('确定'),
+                        ),
+                      ],
+                    );
+                  }
+                );
+              } else {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (ctx) => Query(
+                    treeListShow: this.treeListShow)
+                  )
+                );
+              }
+  
+            },
+            child: Text("提交"),
+          )
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text("登录"),
         elevation: 10.0,
         centerTitle: true,
       ),
-      // body: Login(),
-      body: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (ctx) => Query(
-                    treeListShow: this.treeListShow)));
-            },
-            child: Text("提交"),
-          )
+      body: login,
     );
-    // return SafeArea(
-    //   child: Scaffold(
-    //     appBar: AppBar(
-    //       title: Text("xx系统"),
-    //     ),
-    //     drawer: Container(
-    //       height: MediaQuery.of(context).size.height,
-    //       child: DynamicTreeView(
-    //         data: treeListShow,
-    //         config: Config(
-    //             parentTextStyle:
-    //                 TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-    //             parentPaddingEdgeInsets:
-    //                 EdgeInsets.only(left: 16, top: 0, bottom: 0)),
-    //         width: 220.0,
-    //         onTap: (m) {
-    //           print("onChildTap -> $m");
-    //           Navigator.push(
-    //               context,
-    //               MaterialPageRoute(
-    //                   builder: (ctx) => ScreenTwo(
-    //                         data: m,
-    //                       )));
-    //         },
-    //       ),
-    //       color: Colors.white,
-    //     ),
-    //     body: Column(
-    //       children: <Widget>[
-    //         ElevatedButton(
-    //           onPressed: () {
-    //             Navigator.push(
-    //                 context, MaterialPageRoute(builder: (ctx) => ScreenOne()));
-    //           },
-    //           child: Text('Full Screen TreeView'),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
