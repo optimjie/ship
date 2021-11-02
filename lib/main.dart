@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'xx系统',
+      title: '船舶台账查询系统',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // 将测试数据存到数据库中
 
-    // await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
+     //await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
 
     // for (int i = 0; i < trees.length; i++) {
     //   dynamic treeid = trees[i].getId();
@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             focusNode: _u,
             controller: _user,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.add),
+              prefixIcon: Icon(Icons.person),
               labelText: "账号",
               hintText: "请输入账号",
             ),
@@ -151,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
             focusNode: _p,
             controller: _pass,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.add),
+              prefixIcon: Icon(Icons.vpn_key),
               labelText: "密码",
               hintText: "请输入密码",
             ),
