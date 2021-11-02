@@ -22,6 +22,11 @@ class _SettingsState extends State<Settings> {
   final List<BaseData> treeListShow;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // 用于船的添加
+  var shipId;
+  var shipName;
+
+  // 用于添加船下面的东西
   var parentId;
   var parentName = "";
   var name;
@@ -59,25 +64,61 @@ class _SettingsState extends State<Settings> {
         ),
         body: Column(
           children: <Widget>[
-            Text("请选择添加位置："),
-            Text("已选择：" + this.parentName),
             Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text("添加船："),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: '船编号',
+                    ),
+                    validator: (String? value) {
+                      // if (value == null || value.isEmpty) {
+                      //   return '请输入船编号';
+                      // }
+                      this.shipId = value;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: '船名称',
+                    ),
+                    validator: (String? value) {
+                      // if (value == null || value.isEmpty) {
+                      //   return '请输入船名称';
+                      // }
+                      this.shipName = value;
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Process data.
+                      }
+                      // 执行添加船操作
+                      Tree addTree = Tree(treeid: shipId, treepid: "1", name: shipName, shipname: shipName);
+                      ShipDatabase.instance.treeInsert(addTree);
+                      setState(() {
+                        this.treeListShow.add(addTree);
+                      });
+                    },
+                    child: const Text('保存'),
+                  ),
+                  SizedBox(height: 16),
+                  Text("请选择添加位置："),
+                  Text("已选择：" + this.parentName),
                   TextFormField(
                     decoration: const InputDecoration(
                       hintText: '名称',
                     ),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return '请输入名称';
-                      }
+                      // if (value == null || value.isEmpty) {
+                      //   return '请输入名称';
+                      // }
                       this.name = value;
-                      // print("打印:" + value); 
-                      print("id:" + this.parentId);
-                      return null;
                     },
                   ),
                   Padding(
@@ -95,8 +136,7 @@ class _SettingsState extends State<Settings> {
                         String shipId = this.parentId.substring(0, 4);
                         String idLevel = (int.parse(this.parentId.toString().substring(4, 5))).toString();
                         String myidLevel = (int.parse(idLevel) + 1).toString();
-                        String queryId = shipId + (int.parse(idLevel) + 1).toString();
-                        // print(shipId + " " + queryId + " " + idLevel);
+                        String queryId = shipId + (int.parse(idLevel) + 1).toString();                     
 
                         List<Tree> tempTree = await ShipDatabase.instance.treeGetCnt(queryId + "%");
                         String cnt = tempTree.length.toString();
@@ -117,6 +157,35 @@ class _SettingsState extends State<Settings> {
                       },
                       child: const Text('保存'),
                     ),
+                  ),
+                  Text("请选择需要删除的设备："),
+                  Text("已选择：" + this.parentName),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Process data.
+                      }
+                      // 执行删除操作
+
+                      print("============");
+                      print(this.parentId);
+
+                      await ShipDatabase.instance.treeDeleteByTreeId(this.parentId  );
+                      setState(() {
+                        for (int i = 0; i < treeListShow.length; i++) {
+                          if (treeListShow[i].getId() == this.parentId) {
+                            print("进来了");
+                            treeListShow.removeAt(i);
+                            break;
+                          }
+                        }
+                      });
+                      
+                    },
+                    child: const Text('删除'),
                   ),
                 ],
               ),

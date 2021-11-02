@@ -69,6 +69,33 @@ class ShipDatabase {
     return result.map((json) => User.fromJson(json)).toList();
   }
 
+  Future<int> userDelete(int id) async {
+    final db = await instance.database;
+
+    return await db.delete(
+      tableUser,
+      where: '${UserFields.id} = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<User> userQueryById(int id) async {
+    final db = await instance.database;
+
+    final maps = await db.query(
+      tableUser,
+      columns: UserFields.values,
+      where: '${UserFields.id} = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return User.fromJson(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
+  }
+
   // Tree =========================
 
   Future<List<Tree>> treeGetCnt(String treeid) async {
@@ -130,6 +157,16 @@ class ShipDatabase {
       tableTree,
       where: '${TreeFields.id} = ?',
       whereArgs: [id],
+    );
+  }
+
+  Future<int> treeDeleteByTreeId(String treeid) async {
+    final db = await instance.database;
+
+    return await db.delete(
+      tableTree,
+      where: '${TreeFields.treeid} = ?',
+      whereArgs: [treeid],
     );
   }
 

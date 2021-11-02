@@ -9,6 +9,7 @@ import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:ship/model/User.dart';
 import 'package:ship/widget/Query.dart';
+import 'package:ship/widget/QueryNoSet.dart';
 
 // nox_adb.exe connect 127.0.0.1:62001
 // flutter run --no-sound-null-safety
@@ -72,6 +73,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future refreshTrees() async {
 
+    try {
+      await ShipDatabase.instance.treeQueryById(1);
+    } on Exception {
+      print("没有根结点需要创建");
+      await ShipDatabase.instance.treeInsert(Tree(treeid: "1", treepid: "-1", name: "root", shipname: "shipname"));
+    }
+
+    try {
+      await ShipDatabase.instance.userQueryById(1);
+    } on Exception {
+      print("没有超级管理员需要创建");
+      await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
+    }
+
+    // 测试
+    // await ShipDatabase.instance.userInsert(User(name: "test", password: "test", level: "2"));
+
     // this.trees = createTmpTreeData();  // 只有第一次需要
 
     // 将测试数据存到数据库中
@@ -90,9 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     this.trees = await ShipDatabase.instance.treeQueryAll();
     this.users = await ShipDatabase.instance.userQueryAll();
-
-    List<Tree> t = await ShipDatabase.instance.treeGetCnt("05032%");
-    print("treeGetCnt len:" + t.length.toString());
 
     print("users len:" + users.length.toString());
     for (int i = 0; i < users.length; i++) {
@@ -186,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
 
               if (!userIsExist || !passwdIsCorrect) {
-                //弹窗提示
+                // 弹窗提示
                 showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -206,9 +221,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 );
               } else {
+
+                // 验证通过以后应该看用户的等级
+                int level = -1;
+                for (int i = 0; i < users.length; i++) {
+                  if (users[i].name == _user.text.toString()) {
+                    level = int.parse(users[i].level);
+                  }
+                }
+
                 Navigator.push(
                   context, 
+                  level == 1 ? 
                   MaterialPageRoute(builder: (ctx) => Query(
+                    treeListShow: this.treeListShow)
+                  )
+                  :
+                  MaterialPageRoute(builder: (ctx) => QueryNoSet(
                     treeListShow: this.treeListShow)
                   )
                 );
