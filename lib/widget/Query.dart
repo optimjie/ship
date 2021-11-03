@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
@@ -43,7 +44,7 @@ class Query extends StatelessWidget {
               },
               child: Text('实地查询'),
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text("Open PDF"),
               onPressed: () => Navigator.push(
                 context,
@@ -56,6 +57,8 @@ class Query extends StatelessWidget {
     );
   }
 }
+
+// ignore: must_be_immutable
 class PDFScreen extends StatelessWidget {
   String pathPDF = "";
   PDFScreen(this.pathPDF);
@@ -75,4 +78,3 @@ class PDFScreen extends StatelessWidget {
         path: pathPDF);
   }
 }
-
