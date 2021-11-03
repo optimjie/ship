@@ -1,4 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:collection';
+
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
 import 'package:ship/db/ShipDatabase.dart';
@@ -170,20 +172,52 @@ class _SettingsState extends State<Settings> {
                       }
                       // 执行删除操作
 
-                      print("============");
-                      print(this.parentId);
+                      // print("============");
+                      // print(this.parentId); 
+                      // this.parentId 就是 点击的treeId
 
-                      await ShipDatabase.instance.treeDeleteByTreeId(this.parentId  );
+                      // 考虑子节点：
+                      Map<String, List<String>> child = Map();
+                      for (int i = 0; i < treeListShow.length; i++) {
+                        String treeid = treeListShow[i].getId();
+                        String treepid = treeListShow[i].getParentId();
+                        var l = child[treepid];
+                        if (l == null) {
+                          child[treepid] = [];
+                          child[treepid]?.add(treeid);
+                        } else {
+                          child[treepid]?.add(treeid);
+                        }
+                      }
+
+                      List<String> needRemove = [];
+                      Queue<String> q = Queue();
+                      q.add(this.parentId);
+                      while (!q.isEmpty) {
+                        dynamic t = q.removeFirst();
+                        needRemove.add(t);
+                        var l = child[t];
+                        if (l != null) {
+                          for (int i = 0; i < child[t]!.length; i++) {
+                            q.add(child[t]![i]);
+                          }
+                        }
+                      }
+
+                      for (int i = 0; i < needRemove.length; i++) {
+                        await ShipDatabase.instance.treeDeleteByTreeId(needRemove[i]);
+                      }
                       setState(() {
-                        for (int i = 0; i < treeListShow.length; i++) {
-                          if (treeListShow[i].getId() == this.parentId) {
-                            print("进来了");
-                            treeListShow.removeAt(i);
-                            break;
+                        for (int i = 0; i < needRemove.length; i++) {
+                          for (int j = 0; j < treeListShow.length; j++) {
+                            if (needRemove[i] == treeListShow[j].getId()) {
+                              treeListShow.removeAt(j);
+                              break;
+                            }
                           }
                         }
                       });
-                      
+                    
                     },
                     child: const Text('删除'),
                   ),
