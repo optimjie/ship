@@ -150,6 +150,7 @@ class ShipDatabase {
     );
   }
 
+
   Future<int> treeDelete(int id) async {
     final db = await instance.database;
 
@@ -169,6 +170,24 @@ class ShipDatabase {
       whereArgs: [treeid],
     );
   }
+
+  Future<Tree> treeQueryByTreeId(String treeid) async {
+    final db = await instance.database;
+
+    final maps = await db.query(
+      tableTree,
+      columns: TreeFields.values,
+      where: '${TreeFields.treeid} = ?',
+      whereArgs: [treeid],
+    );
+
+    if (maps.isNotEmpty) {
+      return Tree.fromJson(maps.first);
+    } else {
+      throw Exception('ID $treeid not found');
+    }
+  }
+
 
   Future close() async {
     final db = await instance.database;

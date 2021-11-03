@@ -21,9 +21,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
 
-  final List<BaseData> treeListShow;
+   List<BaseData> treeListShow;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+   bool isLoading = false;
   // 用于船的添加
   var shipId;
   var shipName;
@@ -39,7 +39,10 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
 
     return SafeArea(
-      child: Scaffold(
+
+      child: isLoading
+          ? CircularProgressIndicator()
+          : Scaffold(
         appBar: AppBar(
           title: Text("设置"),
           elevation: 10.0,
@@ -64,7 +67,8 @@ class _SettingsState extends State<Settings> {
             ),
           color: Colors.white,
         ),
-        body: Column(
+        body:SingleChildScrollView(
+            child:Column(
           children: <Widget>[
             Form(
               key: _formKey,
@@ -72,49 +76,114 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("添加船："),
+                  DecoratedBox(decoration: BoxDecoration(
+                   /* gradient: LinearGradient(
+                      colors: [
+                        Colors.lightBlue,
+                        Colors.green,
+                      ],
+                    ),*/
+                 //   color: Colors.blueGrey,
+                    color: Color.fromRGBO(255,235,205, 1),
+                   // borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black45,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 2,
+                      ),
+                    ],
+
+                  ),
+                  child: Column(
+                    children:<Widget>[
+                      Text("船舶添加",  style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 28.0,
+                          height: 1.2,
+                          fontFamily: "Courier",
+                          decorationStyle: TextDecorationStyle.dashed
+                      ),),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: '船只编号',
+                        ),
+                        validator: (String? value) {
+                          // if (value == null || value.isEmpty) {
+                          //   return '请输入船编号';
+                          // }
+                          this.shipId = value;
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: '船只名称',
+                        ),
+                        validator: (String? value) {
+                          // if (value == null || value.isEmpty) {
+                          //   return '请输入船名称';
+                          // }
+                          this.shipName = value;
+                        },
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            // Process data.
+                          }
+                          // 执行添加船操作
+                          Tree addTree = Tree(treeid: shipId, treepid: "1", name: shipName, shipname: shipName);
+                          ShipDatabase.instance.treeInsert(addTree);
+                          setState(() {
+                            this.treeListShow.add(addTree);
+                          });
+                        },
+                        child: const Text('添加',style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28.0,
+                            fontFamily: "Courier",
+                            decorationStyle: TextDecorationStyle.dashed
+                        ),),
+                      ),
+
+                    ],
+                  ),
+                  ),
+
+                  SizedBox(height: 6),
+
+                  DecoratedBox(decoration: BoxDecoration(
+                  /* gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightBlue,
+                                      Colors.green,
+                                    ],
+                                  ),*/
+                  //   color: Colors.blueGrey,
+                  color: Color.fromRGBO(255,235,205, 1),
+                  // borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                  BoxShadow(
+                  color: Colors.black45,
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 2,
+                  ),
+                  ],
+
+                  ),
+                  child: Column(
+                  children:<Widget>[
+                    Text("设备添加",  style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 28.0,
+                        height: 1.2,
+                        fontFamily: "Courier",
+                        decorationStyle: TextDecorationStyle.dashed
+                    ),),
+                    Text( this.parentName=="" ? "请选择添加位置：":"已选择："+this.parentName),
                   TextFormField(
                     decoration: const InputDecoration(
-                      hintText: '船编号',
-                    ),
-                    validator: (String? value) {
-                      // if (value == null || value.isEmpty) {
-                      //   return '请输入船编号';
-                      // }
-                      this.shipId = value;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: '船名称',
-                    ),
-                    validator: (String? value) {
-                      // if (value == null || value.isEmpty) {
-                      //   return '请输入船名称';
-                      // }
-                      this.shipName = value;
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        // Process data.
-                      }
-                      // 执行添加船操作
-                      Tree addTree = Tree(treeid: shipId, treepid: "1", name: shipName, shipname: shipName);
-                      ShipDatabase.instance.treeInsert(addTree);
-                      setState(() {
-                        this.treeListShow.add(addTree);
-                      });
-                    },
-                    child: const Text('保存'),
-                  ),
-                  SizedBox(height: 16),
-                  Text("请选择添加位置："),
-                  Text("已选择：" + this.parentName),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: '名称',
+                      hintText: '设备名称',
                     ),
                     validator: (String? value) {
                       // if (value == null || value.isEmpty) {
@@ -157,11 +226,122 @@ class _SettingsState extends State<Settings> {
                         });
 
                       },
-                      child: const Text('保存'),
+                      child: const Text('添加',style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.0,
+                          fontFamily: "Courier",
+                          decorationStyle: TextDecorationStyle.dashed
+                      ),),
                     ),
                   ),
-                  Text("请选择需要删除的设备："),
-                  Text("已选择：" + this.parentName),
+
+                  ],
+                  ),
+                  ),
+                  SizedBox(height: 6),
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                  DecoratedBox(decoration: BoxDecoration(
+                    /* gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightBlue,
+                                      Colors.green,
+                                    ],
+                                  ),*/
+                    //   color: Colors.blueGrey,
+                    color: Color.fromRGBO(255,235,205, 1),
+                    // borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black45,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 2,
+                      ),
+                    ],
+
+                  ),
+                    child: Column(
+                      children:<Widget>[
+                        Text("设备修改",  style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 28.0,
+                            height: 1.2,
+                            fontFamily: "Courier",
+                            decorationStyle: TextDecorationStyle.dashed
+                        ),),
+                        Text( this.parentName=="" ? "请选择要修改的设备：":"已选择："+this.parentName),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: '设备名称',
+                          ),
+                          validator: (String? value) {
+                            // if (value == null || value.isEmpty) {
+                            //   return '请输入名称';
+                            // }
+                            this.name = value;
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                // Process data.
+                              }
+
+                              //treeQueryById
+
+                             // Tree addTree = Tree(treeid: myId, treepid: this.parentId, name: this.name, shipname: "shipname");
+                             // ShipDatabase.instance.treeInsert(addTree);
+                              Tree editTree = await ShipDatabase.instance.treeQueryByTreeId(this.parentId);
+                              print(editTree.name+"sdd"+editTree.shipname+" "+editTree.id.toString()+editTree.treeid+editTree.treepid);
+                              print(this.name);
+
+                              Tree tree2 = Tree(id:editTree.id,treeid: editTree.treeid, treepid: editTree.treepid, name: this.name, shipname: editTree.shipname);
+                              ShipDatabase.instance.treeUpdate(tree2);
+                              setState(() => isLoading = true);
+                              this.treeListShow = await ShipDatabase.instance.treeQueryAll();
+                              setState(() => isLoading = false);
+
+                            },
+                            child: const Text('修改',style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28.0,
+                                fontFamily: "Courier",
+                                decorationStyle: TextDecorationStyle.dashed
+                            ),),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 6),
+
+                  DecoratedBox(decoration: BoxDecoration(
+                  color: Color.fromRGBO(255,235,205, 1),
+                  // borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                  BoxShadow(
+                  color: Colors.black45,
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 2,
+                  ),
+                  ],
+
+                  ),
+                  child:ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: double.infinity),
+                      child: Column(
+                  children:<Widget>[
+                    Text("设备删除",  style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 28.0,
+                        height: 1.2,
+                        fontFamily: "Courier",
+                        decorationStyle: TextDecorationStyle.dashed
+                    ),),
+                    Text( this.parentName=="" ? "请选择需要删除的设备：":"已选择："+this.parentName),
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -219,14 +399,23 @@ class _SettingsState extends State<Settings> {
                       });
                     
                     },
-                    child: const Text('删除'),
+                    child: const Text('删除',style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28.0,
+                        fontFamily: "Courier",
+                        decorationStyle: TextDecorationStyle.dashed
+                    ),),
+                  ),
+                  ],
+                  ),
+                  ),
                   ),
                 ],
               ),
             )
           ],
         )
-        
+        )
       )
     );
   }
