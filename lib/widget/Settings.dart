@@ -32,6 +32,7 @@ class _SettingsState extends State<Settings> {
   var parentId;
   var parentName = "";
   var name;
+  var editName;
 
   _SettingsState(this.treeListShow);
 
@@ -190,6 +191,7 @@ class _SettingsState extends State<Settings> {
                       //   return '请输入名称';
                       // }
                       this.name = value;
+                      print(this.name);
                     },
                   ),
                   Padding(
@@ -217,10 +219,14 @@ class _SettingsState extends State<Settings> {
                         }
                         String myId = shipId + myidLevel + cnt;
                         // print("myId:" + myId);
-
+                        print("====");
+                        print(this.name);
                         Tree addTree = Tree(treeid: myId, treepid: this.parentId, name: this.name, shipname: "shipname");
                         ShipDatabase.instance.treeInsert(addTree);
 
+                        // setState(() => isLoading = true);
+                        //       this.treeListShow = await ShipDatabase.instance.treeQueryAll();
+                        //       setState(() => isLoading = false);
                         setState(() {
                           this.treeListShow.add(addTree);
                         });
@@ -277,7 +283,7 @@ class _SettingsState extends State<Settings> {
                             // if (value == null || value.isEmpty) {
                             //   return '请输入名称';
                             // }
-                            this.name = value;
+                            this.editName = value;
                           },
                         ),
                         Padding(
@@ -294,13 +300,22 @@ class _SettingsState extends State<Settings> {
                              // ShipDatabase.instance.treeInsert(addTree);
                               Tree editTree = await ShipDatabase.instance.treeQueryByTreeId(this.parentId);
                               print(editTree.name+"sdd"+editTree.shipname+" "+editTree.id.toString()+editTree.treeid+editTree.treepid);
-                              print(this.name);
+                              print(this.editName);
 
-                              Tree tree2 = Tree(id:editTree.id,treeid: editTree.treeid, treepid: editTree.treepid, name: this.name, shipname: editTree.shipname);
+                              Tree tree2 = Tree(id:editTree.id,treeid: editTree.treeid, treepid: editTree.treepid, name: this.editName, shipname: editTree.shipname);
                               ShipDatabase.instance.treeUpdate(tree2);
-                              setState(() => isLoading = true);
-                              this.treeListShow = await ShipDatabase.instance.treeQueryAll();
-                              setState(() => isLoading = false);
+                              
+                              // setState(() => isLoading = true);
+                              // this.treeListShow = await ShipDatabase.instance.treeQueryAll();
+                              // setState(() => isLoading = false);
+
+                              setState(() {
+                                for (int i = 0; i < treeListShow.length; i++) {
+                                  if (treeListShow[i].getId() == this.parentId) {
+                                    treeListShow[i] = tree2;
+                                  }
+                                }
+                              });
 
                             },
                             child: const Text('修改',style: TextStyle(
@@ -364,9 +379,9 @@ class _SettingsState extends State<Settings> {
                         var l = child[treepid];
                         if (l == null) {
                           child[treepid] = [];
-                          child[treepid]?.add(treeid);
+                          child[treepid]!.add(treeid);
                         } else {
-                          child[treepid]?.add(treeid);
+                          child[treepid]!.add(treeid);
                         }
                       }
 
@@ -382,6 +397,10 @@ class _SettingsState extends State<Settings> {
                             q.add(child[t]![i]);
                           }
                         }
+                      }
+
+                      for (int i = 0; i < needRemove.length; i++) {
+                        print("=");
                       }
 
                       for (int i = 0; i < needRemove.length; i++) {
