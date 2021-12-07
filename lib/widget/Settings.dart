@@ -39,15 +39,7 @@ class _SettingsState extends State<Settings> {
 
     final addShip = DecoratedBox(
       decoration: BoxDecoration(
-        /*gradient: LinearGradient(
-          colors: [
-            Colors.lightBlue,
-            Colors.green,
-          ],
-        ),*/
-        // color: Colors.blueGrey,
         color: Color.fromRGBO(255,235,205, 1),
-        // borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black45,
@@ -70,7 +62,7 @@ class _SettingsState extends State<Settings> {
               hintText: '船只编号',
             ),
             validator: (String? value) {
-              // if (value == null || value.isEmpty) {
+              // if (value == null || value.isEmpty) { 
               //   return '请输入船编号';
               // }
               this.shipId = value;
@@ -114,15 +106,7 @@ class _SettingsState extends State<Settings> {
     );
     final addEquipment = DecoratedBox(
       decoration: BoxDecoration(
-        /* gradient: LinearGradient(
-                          colors: [
-                            Colors.lightBlue,
-                            Colors.green,
-                          ],
-                        ),*/
-        // color: Colors.blueGrey,
         color: Color.fromRGBO(255,235,205, 1),
-        // borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black45,

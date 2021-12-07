@@ -27,7 +27,8 @@ class FieldQuery extends StatelessWidget {
           config: Config(
             parentTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
             rootId: "1",
-            parentPaddingEdgeInsets: EdgeInsets.only(left: 16, top: 0, bottom: 0)),
+            parentPaddingEdgeInsets: EdgeInsets.only(left: 16, top: 0, bottom: 0)
+          ),
           onTap: (m) {
             print("onChildTap -> $m");
             Navigator.push(
@@ -35,9 +36,9 @@ class FieldQuery extends StatelessWidget {
               MaterialPageRoute(
                 builder: (ctx) => ScreenTwo(
                   data: m,
-                  )
                 )
-              );
+              )
+            );
           },
           width: MediaQuery.of(context).size.width,
         ),

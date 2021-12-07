@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:ship/ScreenOne.dart';
 import 'package:ship/ScreenTwo.dart';
 // ignore: unused_import
@@ -6,6 +8,7 @@ import 'package:ship/ScreenTwo.dart';
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 
 import 'package:ship/db/ShipDatabase.dart';
+import 'package:ship/model/Ledger.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:ship/model/User.dart';
 import 'package:ship/widget/Query.dart';
@@ -13,7 +16,7 @@ import 'package:ship/widget/QueryNoSet.dart';
 
 // nox_adb.exe connect 127.0.0.1:62001
 // flutter run --no-sound-null-safety
-// 静态sts 动态stf
+// 静态stss 动态stf
 
 void main() {
   runApp(MyApp());
@@ -94,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // 将测试数据存到数据库中
 
-     //await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
+    //await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
 
     // for (int i = 0; i < trees.length; i++) {
     //   dynamic treeid = trees[i].getId();
@@ -105,6 +108,24 @@ class _MyHomePageState extends State<MyHomePage> {
     //     treeid: treeid, treepid: treepid, name: name, shipname: shipname);
     //   await ShipDatabase.instance.treeInsert(t);
     // }
+
+    // =====测试台账==== st
+    // for (int i = 0; i < 12; i++) {
+    //   dynamic name = "_" + i.toString();
+    //   dynamic location = "xx";
+    //   dynamic category;
+    //   if (i % 3 == 0) {
+    //     category = "A";
+    //   } else if (i % 3 == 1) {
+    //     category = "B";
+    //   } else {
+    //     category = "C";
+    //   }
+    //   await ShipDatabase.instance.ledgerInsert(Ledger(name: name, location: location, category: category));
+    // }
+    // =====测试台账==== ed
+
+
 
     this.trees = await ShipDatabase.instance.treeQueryAll();
     this.users = await ShipDatabase.instance.userQueryAll();

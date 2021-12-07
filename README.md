@@ -1,3 +1,10 @@
+## 记录
+
+删除 .idea build pubspec.lock
+执行 flutter clean  flutter pub get  flutter pub deps
+
+**************
+
 ## 2021.11.1
 
 明天需要实现的功能：

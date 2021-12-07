@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:ship/model/User.dart';
+import 'package:ship/model/Ledger.dart';
 
 class ShipDatabase {
   static final ShipDatabase instance = ShipDatabase._init();
@@ -53,7 +54,32 @@ class ShipDatabase {
         ${UserFields.level} $textType
       )
     ''');
+
+    // 创建台账表
+    await db.execute('''
+      CREATE TABLE $tableLedger ( 
+        ${LedgerFields.id} $idType, 
+        ${LedgerFields.name} $textType,
+        ${LedgerFields.location} $textType,
+        ${LedgerFields.category} $textType
+      )
+    ''');
   }
+
+  // Ledger =========================
+
+  Future<Ledger> ledgerInsert(Ledger ledger) async {
+    final db = await instance.database;
+    final id = await db.insert(tableUser, ledger.toJson());
+    return ledger.copy(id: id);
+  }
+
+  Future<List<Ledger>> ledegerQueryAll() async {
+    final db = await instance.database;
+    final result = await db.query(tableLedger);
+    return result.map((json) => Ledger.fromJson(json)).toList();
+  }
+
 
 
   // User =========================
