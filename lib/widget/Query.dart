@@ -57,6 +57,39 @@ class Query extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
               ),
             ),
+            MaterialButton(
+              color: Colors.blue,
+              child: new Text('点我'),
+              onPressed: () {
+                showDialog<Null>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return new AlertDialog(
+                      title: new Text('标题'),
+                      content: new SingleChildScrollView(
+                        child: new ListBody(
+                          children: <Widget>[
+                            new Text('内容 1'),
+                            new PDFScreen("/data/data/com.example.ship/files/2.pdf"),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        new FlatButton(
+                          child: new Text('确定'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ).then((val) {
+                  print(val);
+                });
+              },
+            ),
           ]
         )
       )

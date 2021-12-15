@@ -1,5 +1,6 @@
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:flutter_pickers/pickers.dart';
@@ -38,122 +39,122 @@ class _LedgerQueryState extends State<LedgerQuery> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("台账查询"),
-          elevation: 10.0,
-          centerTitle: true,
-        ),
-        // body: TextFormField(
-        //   decoration: const InputDecoration(
-        //     hintText: '名称',
-        //   ),
-        //   validator: (String? value) {
-        //     this.name = value;
-        //   },
-        // ),
-        // body: ConstrainedBox(
-        //   constraints: BoxConstraints(
-        //     maxWidth: 200
-        //   ),
-        //   child: TextFormField(
-        //     decoration: const InputDecoration(
-        //       hintText: '名称',
-        //     ),
-        //     validator: (String? value) {
-        //       this.name = value;
-        //     },
-        //   ),
-        // )
-        
-        body: SingleChildScrollView(
-          child: Column(
-            children:<Widget>[
-              Container(
-                child: Row(
-                  children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: 200
-                      ),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: '名称',
-                        ),
-                        validator: (String? value) {
-                          this.name = value;
-                        },
-                      )
-                    ),
-                    ElevatedButton(
-                      onPressed: (){
-
-                      },
-                      child: Text('查询'),
-                    ),
-                    SizedBox(height: 6, width: 320,),
-                    Text('查询类别：'),
-                    InkWell(
-                      onTap: () {
-                        Pickers.showSinglePicker(context,
-                          data: ['A', 'B', 'C'],
-                          selectData: initData,
-                          onConfirm: (p, position) {
-                            setState(() {
-                              initData = p;
-                            });
-                          }, 
-                        );
-                      },
-                      child: Text('$initData')
-                    ),
-                  ], 
-                ),
-              ),
-              
-              // 以下为测试表格
-              Container(
-                child: HorizontalDataTable(
-                  leftHandSideColumnWidth: 100,
-                  rightHandSideColumnWidth: 600,
-                  isFixedHeader: true,
-                  headerWidgets: _getTitleWidget(),
-                  leftSideItemBuilder: _generateFirstColumnRow,
-                  rightSideItemBuilder: _generateRightHandSideColumnRow,
-                  itemCount: user.userInfo.length,
-                  rowSeparatorWidget: const Divider(
-                    color: Colors.black54,
-                    height: 1.0,
-                    thickness: 0.0,
-                  ),
-                  leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-                  rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
-                  verticalScrollbarStyle: const ScrollbarStyle(
-                    thumbColor: Colors.yellow,
-                    isAlwaysShown: true,
-                    thickness: 4.0,
-                    radius: Radius.circular(5.0),
-                  ),
-                  horizontalScrollbarStyle: const ScrollbarStyle(
-                    thumbColor: Colors.red,
-                    isAlwaysShown: true,
-                    thickness: 4.0,
-                    radius: Radius.circular(5.0),
-                  ),
-                  enablePullToRefresh: true,
-                  refreshIndicator: const WaterDropHeader(),
-                  refreshIndicatorHeight: 60,
-                  onRefresh: () async {
-                    //Do sth
-                    await Future.delayed(const Duration(milliseconds: 500));
-                    _hdtRefreshController.refreshCompleted();
-                  },
-                  htdRefreshController: _hdtRefreshController,
-                ),
-                height: MediaQuery.of(context).size.height,
-              )
-            ]
+          appBar: AppBar(
+            title: Text("台账查询"),
+            elevation: 10.0,
+            centerTitle: true,
           ),
-        )
+          // body: TextFormField(
+          //   decoration: const InputDecoration(
+          //     hintText: '名称',
+          //   ),
+          //   validator: (String? value) {
+          //     this.name = value;
+          //   },
+          // ),
+          // body: ConstrainedBox(
+          //   constraints: BoxConstraints(
+          //     maxWidth: 200
+          //   ),
+          //   child: TextFormField(
+          //     decoration: const InputDecoration(
+          //       hintText: '名称',
+          //     ),
+          //     validator: (String? value) {
+          //       this.name = value;
+          //     },
+          //   ),
+          // )
+
+          body: SingleChildScrollView(
+            child: Column(
+                children:<Widget>[
+                  Container(
+                    child: Row(
+                      children: [
+                        ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth: 200
+                            ),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: '名称',
+                              ),
+                              validator: (String? value) {
+                                this.name = value;
+                              },
+                            )
+                        ),
+                        ElevatedButton(
+                          onPressed: (){
+
+                          },
+                          child: Text('查询'),
+                        ),
+                        SizedBox(height: 6, width: 320,),
+                        Text('查询类别：'),
+                        InkWell(
+                            onTap: () {
+                              Pickers.showSinglePicker(context,
+                                data: ['A', 'B', 'C'],
+                                selectData: initData,
+                                onConfirm: (p, position) {
+                                  setState(() {
+                                    initData = p;
+                                  });
+                                },
+                              );
+                            },
+                            child: Text('$initData')
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 以下为测试表格
+                  Container(
+                    child: HorizontalDataTable(
+                      leftHandSideColumnWidth: 100,
+                      rightHandSideColumnWidth: 700,//改成700防止溢出
+                      isFixedHeader: true,
+                      headerWidgets: _getTitleWidget(),
+                      leftSideItemBuilder: _generateFirstColumnRow,
+                      rightSideItemBuilder: _generateRightHandSideColumnRow,
+                      itemCount: user.userInfo.length,
+                      rowSeparatorWidget: const Divider(
+                        color: Colors.black54,
+                        height: 1.0,
+                        thickness: 0.0,
+                      ),
+                      leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
+                      rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+                      verticalScrollbarStyle: const ScrollbarStyle(
+                        thumbColor: Colors.yellow,
+                        isAlwaysShown: true,
+                        thickness: 4.0,
+                        radius: Radius.circular(5.0),
+                      ),
+                      horizontalScrollbarStyle: const ScrollbarStyle(
+                        thumbColor: Colors.red,
+                        isAlwaysShown: true,
+                        thickness: 4.0,
+                        radius: Radius.circular(5.0),
+                      ),
+                      enablePullToRefresh: true,
+                      refreshIndicator: const WaterDropHeader(),
+                      refreshIndicatorHeight: 60,
+                      onRefresh: () async {
+                        //Do sth
+                        await Future.delayed(const Duration(milliseconds: 500));
+                        _hdtRefreshController.refreshCompleted();
+                      },
+                      htdRefreshController: _hdtRefreshController,
+                    ),
+                    height: MediaQuery.of(context).size.height,
+                  )
+                ]
+            ),
+          )
       ),
     );
   }
@@ -220,7 +221,8 @@ class _LedgerQueryState extends State<LedgerQuery> {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    return Row(
+    return new Expanded(
+        child:Row(//y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
       children: <Widget>[
         Container(
           child: Row(
@@ -230,7 +232,7 @@ class _LedgerQueryState extends State<LedgerQuery> {
                       ? Icons.notifications_off
                       : Icons.notifications_active,
                   color:
-                      user.userInfo[index].status ? Colors.red : Colors.green),
+                  user.userInfo[index].status ? Colors.red : Colors.green),
               Text(user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
@@ -288,7 +290,21 @@ class _LedgerQueryState extends State<LedgerQuery> {
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
+        Container(
+          child: ElevatedButton(
+            child: Text("Open PDF"),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+            ),
+          ),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
       ],
+    ),
     );
   }
 }
@@ -348,6 +364,27 @@ class UserInfo {
 
   UserInfo(this.name, this.status, this.a, this.b, this.c, this.d);
 
-  // UserInfo(this.name, this.status, this.phone, this.registerDate,
-  //     this.terminationDate);
+// UserInfo(this.name, this.status, this.phone, this.registerDate,
+//     this.terminationDate);
+}
+// ignore: must_be_immutable   PDF界面
+class PDFScreen extends StatelessWidget {
+  String pathPDF = "";
+  PDFScreen(this.pathPDF);
+
+  @override
+  Widget build(BuildContext context) {
+    return PDFViewerScaffold(
+        appBar: AppBar(
+          title: Text("Document"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        path: pathPDF
+    );
+  }
 }
