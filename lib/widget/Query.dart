@@ -8,6 +8,7 @@ import 'package:ship/widget/FieldQuery.dart';
 import 'FieldQuery.dart';
 import 'LedgerQuery.dart';
 import 'Settings.dart';
+import 'FieldQueryTest.dart';
 
 class Query extends StatelessWidget {
 
@@ -49,6 +50,14 @@ class Query extends StatelessWidget {
                 );
               },
               child: Text('实地查询'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (ctx) => FieldQueryTest(treeListShow: this.treeListShow))
+                );
+              },
+              child: Text('实地查询测试'),
             ),
             ElevatedButton(
               child: Text("Open PDF"),
