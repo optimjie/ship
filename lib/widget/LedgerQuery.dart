@@ -19,8 +19,8 @@ class LedgerQuery extends StatefulWidget {
 
 class _LedgerQueryState extends State<LedgerQuery> {
 
-  var name;  // 用于模糊查询
-  String initData = 'A';
+  var vagueName = '1234';  // 用于模糊查询
+  String categorySelect = 'A';
 
   // 用于测试表格
   HDTRefreshController _hdtRefreshController = HDTRefreshController();
@@ -29,9 +29,22 @@ class _LedgerQueryState extends State<LedgerQuery> {
   bool isAscending = true;
   int sortType = sortName;
 
+  // 所有数据
+  List<UserInfo> all = [];
+  // late List<UserInfo> allFilterByCategory;
+
   @override
   void initState() {
-    user.initData(10);
+    // 这里的全部数据应该从数据库中获取
+    user.initData(3);
+    all.clear();
+    all = user.userInfo;
+    // for (int i = 0; i < all.length; i++) {
+    //   UserInfo u = all[i];
+    //   if (u.d == 'A') {  // 因为默认是A
+    //     allFilterByCategory.add(u);
+    //   }
+    // }
     super.initState();
   }
 
@@ -44,28 +57,6 @@ class _LedgerQueryState extends State<LedgerQuery> {
             elevation: 10.0,
             centerTitle: true,
           ),
-          // body: TextFormField(
-          //   decoration: const InputDecoration(
-          //     hintText: '名称',
-          //   ),
-          //   validator: (String? value) {
-          //     this.name = value;
-          //   },
-          // ),
-          // body: ConstrainedBox(
-          //   constraints: BoxConstraints(
-          //     maxWidth: 200
-          //   ),
-          //   child: TextFormField(
-          //     decoration: const InputDecoration(
-          //       hintText: '名称',
-          //     ),
-          //     validator: (String? value) {
-          //       this.name = value;
-          //     },
-          //   ),
-          // )
-
           body: SingleChildScrollView(
             child: Column(
                 children:<Widget>[
@@ -77,17 +68,32 @@ class _LedgerQueryState extends State<LedgerQuery> {
                                 maxWidth: 200
                             ),
                             child: TextFormField(
+                              onChanged: (v) {
+                                this.vagueName = v;
+                                // print(v);
+                              },
                               decoration: const InputDecoration(
                                 hintText: '名称',
                               ),
                               validator: (String? value) {
-                                this.name = value;
+                                this.vagueName = value!;
                               },
                             )
                         ),
                         ElevatedButton(
-                          onPressed: (){
-
+                          onPressed: () {  
+                            setState(() {
+                              // 需要修改的部分
+                              user.userInfo = [];
+                              // print("here!!!" + all.length.toString());
+                              for (int i = 0; i < all.length; i++) {
+                                UserInfo u = all[i];
+                                // print(u.a + this.vagueName);
+                                if (u.a.indexOf(this.vagueName) != -1) {
+                                  user.userInfo.add(u);
+                                }
+                              }
+                            });
                           },
                           child: Text('查询'),
                         ),
@@ -97,25 +103,34 @@ class _LedgerQueryState extends State<LedgerQuery> {
                             onTap: () {
                               Pickers.showSinglePicker(context,
                                 data: ['A', 'B', 'C'],
-                                selectData: initData,
+                                selectData: categorySelect,
                                 onConfirm: (p, position) {
                                   setState(() {
-                                    initData = p;
+                                    if (p != categorySelect) {
+                                      categorySelect = p;
+                                      user.userInfo = [];
+                                      for (int i = 0; i < all.length; i++) {
+                                        UserInfo u = all[i];
+                                        // print(u.a + this.vagueName);
+                                        if (u.d == categorySelect) {
+                                          user.userInfo.add(u);
+                                        }
+                                      }
+                                    }                                    
                                   });
                                 },
                               );
                             },
-                            child: Text('$initData')
+                            child: Text('$categorySelect')
                         ),
                       ],
                     ),
                   ),
-
                   // 以下为测试表格
                   Container(
                     child: HorizontalDataTable(
                       leftHandSideColumnWidth: 100,
-                      rightHandSideColumnWidth: 700,//改成700防止溢出
+                      rightHandSideColumnWidth: 700,  // 改成700防止溢出
                       isFixedHeader: true,
                       headerWidgets: _getTitleWidget(),
                       leftSideItemBuilder: _generateFirstColumnRow,
@@ -321,6 +336,10 @@ class User {
       userInfo.add(UserInfo(
           "器具_$i", i % 3 == 0, '压力表', 'Sinkow', '热水锅炉', 'A'));
     }
+    // 添加几个不是压力表不是A类的数据进行测试
+    userInfo.add(UserInfo("test1", true, '111', '111', '111', 'B'));
+    userInfo.add(UserInfo("test2", true, '112', '222', '222', 'B'));
+    userInfo.add(UserInfo("test3", true, '223', '222', '222', 'C'));
   }
 
   ///
