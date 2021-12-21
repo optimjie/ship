@@ -236,8 +236,7 @@ class _LedgerQueryState extends State<LedgerQuery> {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    return new Expanded(
-        child:Row(//y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
+    return new Row(//y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
       children: <Widget>[
         Container(
           child: Row(
@@ -319,8 +318,8 @@ class _LedgerQueryState extends State<LedgerQuery> {
           alignment: Alignment.centerLeft,
         ),
       ],
-    ),
-    );
+    )
+    ;
   }
 }
 

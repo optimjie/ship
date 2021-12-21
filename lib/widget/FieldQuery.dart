@@ -21,23 +21,23 @@ class FieldQuery extends StatelessWidget {
           elevation: 10.0,
           centerTitle: true,
         ),
-        body: 
+        body:
         DynamicTreeView(
           data: treeListShow,
           config: Config(
-            parentTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-            rootId: "1",
-            parentPaddingEdgeInsets: EdgeInsets.only(left: 16, top: 0, bottom: 0)
+              parentTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              rootId: "1",
+              parentPaddingEdgeInsets: EdgeInsets.only(left: 16, top: 0, bottom: 0)
           ),
           onTap: (m) {
             print("onChildTap -> $m");
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => ScreenTwo(
-                  data: m,
+                context,
+                MaterialPageRoute(
+                    builder: (ctx) => ScreenTwo(
+                      data: m,
+                    )
                 )
-              )
             );
           },
           width: MediaQuery.of(context).size.width,
