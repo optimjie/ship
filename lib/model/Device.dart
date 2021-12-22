@@ -5,7 +5,9 @@ final String tableLedger = 'ledger';
 class DevicesFields {
 
   static final List<String> values = [
-    id, name, location, category
+    id,status ,name ,manufacturer ,location ,category ,model ,range ,accuracy ,serialNumber, principal ,activationDate,
+    inspectionDate ,verificationCategory, certificateNumber ,verificationDate ,verificationPeriod, effectiveDate ,verifier, shipId ,glbq, jybq ,abc ,menuId
+
   ];
 
   static final String id = '_id';
