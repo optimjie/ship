@@ -19,6 +19,7 @@ class FieldQueryTest extends StatefulWidget {
 }
 
 class _FieldQueryTestState extends State<FieldQueryTest> {
+  bool isLoading = false;
   List<BaseData> treeListShow;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // 用于船的添加
@@ -72,7 +73,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
       ),
       child: Column(
           children:<Widget>[
-            Container(
+           /* Container(
               child: Row(
                 children: [
                   ConstrainedBox(
@@ -137,7 +138,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                   ),
                 ],
               ),
-            ),
+            ),*/
             // 以下为测试表格
             Container(
               child: HorizontalDataTable(
@@ -177,7 +178,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                 },
                 htdRefreshController: _hdtRefreshController,
               ),
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height-80,
             )
           ]
       ),
@@ -399,6 +400,7 @@ class User {
   List<UserInfo> userInfo = [];
 
   void initData(int size) {
+    userInfo.clear();
     for (int i = 0; i < size; i++) {
       userInfo.add(UserInfo(
           "器具_$i", i % 3 == 0, '压力表', 'Sinkow', '热水锅炉', 'A'));
