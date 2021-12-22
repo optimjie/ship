@@ -1,6 +1,6 @@
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 
-final String tableLedger = 'ledger';
+final String tableLedger = 'equipment';
 
 class LedgerFields {
 

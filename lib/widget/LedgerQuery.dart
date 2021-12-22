@@ -13,7 +13,7 @@ import '../ScreenTwo.dart';
 class LedgerQuery extends StatefulWidget {
   // final List<BaseData> treeListShow;
   final List<Device> devices;
-  const LedgerQuery({ Key? key, required this.devices }) : super(key: key);
+  const LedgerQuery({ Key? key, required this.devices, List<BaseData>? treeListShow }) : super(key: key);
 
   @override
   _LedgerQueryState createState() => _LedgerQueryState(devices);

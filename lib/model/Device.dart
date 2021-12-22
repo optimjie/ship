@@ -2,6 +2,7 @@ import 'package:dynamic_treeview/dynamic_treeview.dart';
 
 final String tableDevice = 'device';
 
+
 class DevicesFields {
 
   static final List<String> values = [

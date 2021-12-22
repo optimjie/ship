@@ -89,6 +89,7 @@ class ShipDatabase {
     ''');
 
     // 创建台账表
+
     await db.execute('''
       CREATE TABLE $tableLedger ( 
         ${LedgerFields.id} $idType, 
@@ -97,6 +98,37 @@ class ShipDatabase {
         ${LedgerFields.category} $textType
       )
     ''');
+
+    //创建设备表
+    await db.execute('''
+      CREATE TABLE $tableDevice ( 
+        ${DevicesFields.id} $idType, 
+        ${DevicesFields.status} $textType,
+        ${DevicesFields.name} $textType,
+        ${DevicesFields.manufacturer} $textType
+        ${DevicesFields.location} $textType
+        ${DevicesFields.category} $textType
+        ${DevicesFields.model} $textType
+        ${DevicesFields.range} $textType
+        ${DevicesFields.accuracy} $textType
+        ${DevicesFields.serialNumber} $textType
+        ${DevicesFields.principal} $textType
+        ${DevicesFields.activationDate} $textType
+        ${DevicesFields.inspectionDate} $textType
+        ${DevicesFields.verificationCategory} $textType
+        ${DevicesFields.certificateNumber} $textType
+        ${DevicesFields.verificationDate} $textType
+        ${DevicesFields.verificationPeriod} $textType
+        ${DevicesFields.effectiveDate} $textType
+        ${DevicesFields.verifier} $textType
+        ${DevicesFields.shipId} $textType
+        ${DevicesFields.glbq} $textType
+        ${DevicesFields.jybq} $textType
+        ${DevicesFields.abc} $textType
+        ${DevicesFields.menuId} $textType
+      )
+    ''');
+
   }
 
   // Device =========================
@@ -111,6 +143,22 @@ class ShipDatabase {
     final db = await instance.database;
     final result = await db.query(tableDevice);
     return result.map((json) => Device.fromJson(json)).toList();
+  }
+
+  Future<List<Device>> deviceQueryBymenuId(String menuId) async {
+    final db = await instance.database;
+    final result = await db.query(
+      tableDevice,
+      columns: DevicesFields.values,
+      where: '${DevicesFields.menuId} = ?',
+      whereArgs: [menuId],
+    );
+    return result.map((json) => Device.fromJson(json)).toList();
+    /*if (result.isNotEmpty) {
+      return result.map((json) => Devices.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $menuId not found');
+    }*/
   }
 
   // Ledger =========================
