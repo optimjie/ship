@@ -27,6 +27,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
   var shipId='c';
   var shipName;
   var menuID;
+  var menulocation;
 
 
   _FieldQueryTestState(this.treeListShow);
@@ -121,7 +122,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                 },
                 htdRefreshController: _hdtRefreshController,
               ),
-              height: MediaQuery.of(context).size.height-80,
+              height: MediaQuery.of(context).size.height-80-50,
             )
           ]
       ),
@@ -152,6 +153,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                       this.menuID=a[0].substring(5);
                       print(this.menuID.toString()+"sdf");
                       setState(() => isLoading = true);
+                      this.menulocation=a[2].substring(7);
                       this.allDevices =  await ShipDatabase.instance.deviceQueryBymenuId(this.menuID);
                       setState(() => isLoading = false);
 
@@ -166,12 +168,36 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                           )
                       );*/
                     },
-                    width: 260.0,
+                    width: 210.0,
                   ),]
               ),
               Expanded(
                 flex: 4,
-                child:tableshow,
+                child:Column(
+                  children: <Widget>[
+                Row(
+                children: [
+                    Text(this.menulocation==null ? "当前位置：--":"当前位置："+this.menulocation,  style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 28.0,
+                        height: 1.2,
+                        fontFamily: "Courier",
+                        decorationStyle: TextDecorationStyle.dashed
+                    ),),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (ctx) => LedgerQuery(treeListShow: this.treeListShow))
+                      );
+                    },
+                    child: Text('台账查询'),
+                  )
+                   ]),
+
+                   tableshow,
+                  ]
+                )
               )
             ],
           )
