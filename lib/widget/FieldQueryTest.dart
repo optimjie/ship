@@ -5,6 +5,7 @@ import 'package:flutter_pickers/pickers.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
 import 'package:ship/db/ShipDatabase.dart';
+import 'package:ship/model/Device.dart';
 import 'package:ship/model/Tree.dart';
 
 import '../DataModel.dart';
@@ -25,6 +26,8 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
   // 用于船的添加
   var shipId='c';
   var shipName;
+  var menuID;
+
 
   _FieldQueryTestState(this.treeListShow);
   //表格
@@ -41,10 +44,15 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
   List<UserInfo> all = [];
   // late List<UserInfo> allFilterByCategory;
 
+  //Devices
+  List<Devices> allDevices = [];
+
   @override
   void initState() {
+    super.initState();
     // 这里的全部数据应该从数据库中获取
     user.initData(3);
+    getDevice();
     all.clear();
     all = user.userInfo;
     // for (int i = 0; i < all.length; i++) {
@@ -60,7 +68,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
 
   @override
   Widget build(BuildContext context) {
-    final addShip = DecoratedBox(
+    final tableshow = DecoratedBox(
       decoration: BoxDecoration(
         color: Color.fromRGBO(255,235,205, 1),
         boxShadow: [
@@ -73,72 +81,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
       ),
       child: Column(
           children:<Widget>[
-           /* Container(
-              child: Row(
-                children: [
-                  ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxWidth: 200
-                      ),
-                      child: TextFormField(
-                        onChanged: (v) {
-                          this.vagueName = v;
-                          // print(v);
-                        },
-                        decoration: const InputDecoration(
-                          hintText: '名称',
-                        ),
-                        validator: (String? value) {
-                          this.vagueName = value!;
-                        },
-                      )
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        // 需要修改的部分
-                        user.userInfo = [];
-                        // print("here!!!" + all.length.toString());
-                        for (int i = 0; i < all.length; i++) {
-                          UserInfo u = all[i];
-                          // print(u.a + this.vagueName);
-                          if (u.a.indexOf(this.vagueName) != -1) {
-                            user.userInfo.add(u);
-                          }
-                        }
-                      });
-                    },
-                    child: Text('查询'),
-                  ),
-                  SizedBox(height: 6, width: 320,),
-                  Text('查询类别：'),
-                  InkWell(
-                      onTap: () {
-                        Pickers.showSinglePicker(context,
-                          data: ['A', 'B', 'C'],
-                          selectData: categorySelect,
-                          onConfirm: (p, position) {
-                            setState(() {
-                              if (p != categorySelect) {
-                                categorySelect = p;
-                                user.userInfo = [];
-                                for (int i = 0; i < all.length; i++) {
-                                  UserInfo u = all[i];
-                                  // print(u.a + this.vagueName);
-                                  if (u.d == categorySelect) {
-                                    user.userInfo.add(u);
-                                  }
-                                }
-                              }
-                            });
-                          },
-                        );
-                      },
-                      child: Text('$categorySelect')
-                  ),
-                ],
-              ),
-            ),*/
+
             // 以下为测试表格
             Container(
               child: HorizontalDataTable(
@@ -148,7 +91,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                 headerWidgets: _getTitleWidget(),
                 leftSideItemBuilder: _generateFirstColumnRow,
                 rightSideItemBuilder: _generateRightHandSideColumnRow,
-                itemCount: user.userInfo.length,
+                itemCount: allDevices.length,
                 rowSeparatorWidget: const Divider(
                   color: Colors.black54,
                   height: 1.0,
@@ -184,7 +127,9 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
       ),
     );
     return SafeArea(
-      child: Scaffold(
+      child: isLoading
+          ? CircularProgressIndicator()
+          :Scaffold(
           appBar: AppBar(
             title: Text("实地查询"),
             elevation: 10.0,
@@ -201,9 +146,16 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                         rootId: "1",
                         parentPaddingEdgeInsets: EdgeInsets.only(left: 0, top: 0, bottom: 0)
                     ),
-                    onTap: (m) {
+                    onTap: (m) async {
                       print("onChildTap -> $m");
-                      this.shipName = m;
+                      List<String> a = m.toString().split(",");
+                      this.menuID=a[0].substring(5);
+                      print(this.menuID.toString()+"sdf");
+                      setState(() => isLoading = true);
+                      this.allDevices =  await ShipDatabase.instance.deviceQueryBymenuId(this.menuID);
+                      setState(() => isLoading = false);
+
+
                       /*Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -219,10 +171,11 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
               ),
               Expanded(
                 flex: 4,
-                child:addShip,
+                child:tableshow,
               )
             ],
           )
+
 
       ),
     );
@@ -265,10 +218,12 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
       // _getTitleItemWidget('Phone', 200),
       // _getTitleItemWidget('Register', 100),
       // _getTitleItemWidget('Termination', 200),
-      _getTitleItemWidget('计量器具名称', 200),
+
       _getTitleItemWidget('生产厂家', 100),
       _getTitleItemWidget('安装位置', 100),
+      _getTitleItemWidget('位置负责人', 100),
       _getTitleItemWidget('检定类别', 100),
+      _getTitleItemWidget('有效日期', 100),
     ];
   }
 
@@ -284,7 +239,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(user.userInfo[index].name),
+      child: Text(allDevices[index].name),
       width: 100,
       height: 52,
       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -299,12 +254,12 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
           child: Row(
             children: <Widget>[
               Icon(
-                  user.userInfo[index].status
+                  allDevices[index].status!="正常"
                       ? Icons.notifications_off
                       : Icons.notifications_active,
                   color:
-                  user.userInfo[index].status ? Colors.red : Colors.green),
-              Text(user.userInfo[index].status ? 'Disabled' : 'Active')
+                  allDevices[index].status!="正常" ? Colors.red : Colors.green),
+              Text(allDevices[index].status!="正常" ? 'Disabled' : 'Active')
             ],
           ),
           width: 100,
@@ -312,50 +267,36 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
-        // Container(
-        //   child: Text(user.userInfo[index].phone),
-        //   width: 200,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
-        // Container(
-        //   child: Text(user.userInfo[index].registerDate),
-        //   width: 100,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
-        // Container(
-        //   child: Text(user.userInfo[index].terminationDate),
-        //   width: 200,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
         Container(
-          child: Text(user.userInfo[index].a),
-          width: 200,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
-        ),
-        Container(
-          child: Text(user.userInfo[index].b),
+          child: Text(allDevices[index].manufacturer!=null ? allDevices[index].manufacturer:"——"),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].c),
+          child: Text(allDevices[index].location),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].d),
+          child: Text(allDevices[index].principal),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text(allDevices[index].verificationCategory),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text(allDevices[index].effectiveDate),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -363,7 +304,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
         ),
         Container(
           child: ElevatedButton(
-            child: Text("Open PDF"),
+            child: Text("检验报告"),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
@@ -378,6 +319,27 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
     )
     ;
   }
+
+
+  //Device
+  Future getDevice() async
+{
+  //List<Devices> a=[];
+  setState(() => isLoading = true);
+  this.allDevices =  await ShipDatabase.instance.deviceQueryAll();
+  setState(() => isLoading = false);
+  // print("sss");
+  // print(a.length);
+  // print("sss");
+
+}
+
+
+
+
+
+
+
 }
 
 
@@ -400,6 +362,10 @@ class User {
   List<UserInfo> userInfo = [];
 
   void initData(int size) {
+
+    //
+
+    //
     userInfo.clear();
     for (int i = 0; i < size; i++) {
       userInfo.add(UserInfo(
