@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:ship/model/User.dart';
 import 'package:ship/model/Ledger.dart';
+import 'package:ship/model/Device.dart';
 
 class ShipDatabase {
   static final ShipDatabase instance = ShipDatabase._init();
@@ -33,6 +34,38 @@ class ShipDatabase {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
     final integerType = 'INTEGER NOT NULL';
+
+    // 创建设备表
+    await db.execute('''
+      CREATE TABLE '$tableDevice' ( 
+        ${DevicesFields.id} $idType, 
+        ${DevicesFields.myid} $integerType, 
+        ${DevicesFields.status} $textType, 
+        ${DevicesFields.name} $textType, 
+        ${DevicesFields.manufacturer} $textType, 
+        ${DevicesFields.location} $textType, 
+        ${DevicesFields.category} $textType, 
+        ${DevicesFields.model} $textType, 
+        ${DevicesFields.range} $textType, 
+        ${DevicesFields.accuracy} $textType, 
+        ${DevicesFields.serialNumber} $textType, 
+        ${DevicesFields.principal} $textType, 
+        ${DevicesFields.activationDate} $textType, 
+        ${DevicesFields.inspectionDate} $textType, 
+        ${DevicesFields.verificationCategory} $textType, 
+        ${DevicesFields.certificateNumber} $textType, 
+        ${DevicesFields.verificationDate} $textType, 
+        ${DevicesFields.verificationPeriod} $textType, 
+        ${DevicesFields.effectiveDate} $textType, 
+        ${DevicesFields.verifier} $textType, 
+        ${DevicesFields.shipId} $textType, 
+        ${DevicesFields.glbq} $textType, 
+        ${DevicesFields.jybq} $textType, 
+        ${DevicesFields.jybg} $textType, 
+        ${DevicesFields.abc} $textType, 
+        ${DevicesFields.menuId} $textType
+      )
+    ''');
 
     // 创建tree表
     await db.execute('''
@@ -66,11 +99,25 @@ class ShipDatabase {
     ''');
   }
 
+  // Device =========================
+
+  Future<Device> deviceInsert(Device device) async {
+    final db = await instance.database;
+    final id = await db.insert(tableDevice, device.toJson());
+    return device.copy(id: id);
+  }
+
+  Future<List<Device>> deviceQueryAll() async {
+    final db = await instance.database;
+    final result = await db.query(tableDevice);
+    return result.map((json) => Device.fromJson(json)).toList();
+  }
+
   // Ledger =========================
 
   Future<Ledger> ledgerInsert(Ledger ledger) async {
     final db = await instance.database;
-    final id = await db.insert(tableUser, ledger.toJson());
+    final id = await db.insert(tableLedger, ledger.toJson());
     return ledger.copy(id: id);
   }
 

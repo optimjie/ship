@@ -1,5 +1,6 @@
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
+import 'package:ship/model/Device.dart';
 
 import 'Query.dart';
 
@@ -19,6 +20,7 @@ class _LoginState extends State<Login> {
   late FocusScopeNode _focusScopeNode;
 
   final List<BaseData> treeListShow = [];
+  final List<Device> devices = [];
 
   @override
   void dispose() {
@@ -75,7 +77,7 @@ class _LoginState extends State<Login> {
           ElevatedButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (ctx) => Query(treeListShow: this.treeListShow)));
+                  context, MaterialPageRoute(builder: (ctx) => Query(treeListShow: this.treeListShow, devices: this.devices)));
             },
             child: Text("提交"),
           )

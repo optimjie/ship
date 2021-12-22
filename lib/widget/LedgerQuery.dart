@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Tree.dart';
+import 'package:ship/model/Device.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
@@ -10,11 +11,12 @@ import '../DataModel.dart';
 import '../ScreenTwo.dart';
 
 class LedgerQuery extends StatefulWidget {
-  final List<BaseData> treeListShow;
-  const LedgerQuery({ Key? key, required this.treeListShow }) : super(key: key);
+  // final List<BaseData> treeListShow;
+  final List<Device> devices;
+  const LedgerQuery({ Key? key, required this.devices }) : super(key: key);
 
   @override
-  _LedgerQueryState createState() => _LedgerQueryState();
+  _LedgerQueryState createState() => _LedgerQueryState(devices);
 }
 
 class _LedgerQueryState extends State<LedgerQuery> {
@@ -29,22 +31,16 @@ class _LedgerQueryState extends State<LedgerQuery> {
   bool isAscending = true;
   int sortType = sortName;
 
-  // 所有数据
-  List<UserInfo> all = [];
-  // late List<UserInfo> allFilterByCategory;
+
+  List<Device> devices;
+  late List<Device> devicesToShow;
+
+  _LedgerQueryState(this.devices);
 
   @override
   void initState() {
-    // 这里的全部数据应该从数据库中获取
-    user.initData(3);
-    all.clear();
-    all = user.userInfo;
-    // for (int i = 0; i < all.length; i++) {
-    //   UserInfo u = all[i];
-    //   if (u.d == 'A') {  // 因为默认是A
-    //     allFilterByCategory.add(u);
-    //   }
-    // }
+    devicesToShow = devices;
+    
     super.initState();
   }
 
@@ -84,13 +80,13 @@ class _LedgerQueryState extends State<LedgerQuery> {
                           onPressed: () {  
                             setState(() {
                               // 需要修改的部分
-                              user.userInfo = [];
+                              devicesToShow = [];
                               // print("here!!!" + all.length.toString());
-                              for (int i = 0; i < all.length; i++) {
-                                UserInfo u = all[i];
+                              for (int i = 0; i < devices.length; i++) {
+                                Device d = devices[i];
                                 // print(u.a + this.vagueName);
-                                if (u.a.indexOf(this.vagueName) != -1) {
-                                  user.userInfo.add(u);
+                                if (d.name.indexOf(this.vagueName) != -1) {
+                                  devicesToShow.add(d);
                                 }
                               }
                             });
@@ -108,12 +104,12 @@ class _LedgerQueryState extends State<LedgerQuery> {
                                   setState(() {
                                     if (p != categorySelect) {
                                       categorySelect = p;
-                                      user.userInfo = [];
-                                      for (int i = 0; i < all.length; i++) {
-                                        UserInfo u = all[i];
+                                      devicesToShow = [];
+                                      for (int i = 0; i < devices.length; i++) {
+                                        Device d = devices[i];
                                         // print(u.a + this.vagueName);
-                                        if (u.d == categorySelect) {
-                                          user.userInfo.add(u);
+                                        if (d.verificationCategory[0] == categorySelect) {
+                                          devicesToShow.add(d);
                                         }
                                       }
                                     }                                    
@@ -126,16 +122,15 @@ class _LedgerQueryState extends State<LedgerQuery> {
                       ],
                     ),
                   ),
-                  // 以下为测试表格
                   Container(
                     child: HorizontalDataTable(
                       leftHandSideColumnWidth: 100,
-                      rightHandSideColumnWidth: 700,  // 改成700防止溢出
+                      rightHandSideColumnWidth: 880,  
                       isFixedHeader: true,
                       headerWidgets: _getTitleWidget(),
                       leftSideItemBuilder: _generateFirstColumnRow,
                       rightSideItemBuilder: _generateRightHandSideColumnRow,
-                      itemCount: user.userInfo.length,
+                      itemCount: devicesToShow.length,
                       rowSeparatorWidget: const Divider(
                         color: Colors.black54,
                         height: 1.0,
@@ -176,42 +171,15 @@ class _LedgerQueryState extends State<LedgerQuery> {
 
   List<Widget> _getTitleWidget() {
     return [
-      TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-        ),
-        child: _getTitleItemWidget(
-            '计量器名称' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
-            100),
-        onPressed: () {
-          sortType = sortName;
-          isAscending = !isAscending;
-          user.sortName(isAscending);
-          setState(() {});
-        },
-      ),
-      TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-        ),
-        child: _getTitleItemWidget(
-            '状态' +
-                (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
-            100),
-        onPressed: () {
-          sortType = sortStatus;
-          isAscending = !isAscending;
-          user.sortStatus(isAscending);
-          setState(() {});
-        },
-      ),
-      // _getTitleItemWidget('Phone', 200),
-      // _getTitleItemWidget('Register', 100),
-      // _getTitleItemWidget('Termination', 200),
-      _getTitleItemWidget('计量器具名称', 200),
-      _getTitleItemWidget('生产厂家', 100),
+      _getTitleItemWidget('计量器具名称', 100),
+      _getTitleItemWidget('状态', 100),
+      _getTitleItemWidget('生产厂家', 180),
       _getTitleItemWidget('安装位置', 100),
+      _getTitleItemWidget('位置负责人', 100),
       _getTitleItemWidget('检定类别', 100),
+      _getTitleItemWidget('有效日期', 100),
+      _getTitleItemWidget('管理标签', 100),
+      _getTitleItemWidget('检验标签', 100),
     ];
   }
 
@@ -227,8 +195,8 @@ class _LedgerQueryState extends State<LedgerQuery> {
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(user.userInfo[index].name),
-      width: 100,
+      child: Text(devicesToShow[index].name),
+      width: 200,
       height: 52,
       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
@@ -236,18 +204,18 @@ class _LedgerQueryState extends State<LedgerQuery> {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    return new Row(//y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
+    return new Row(  // y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
       children: <Widget>[
         Container(
           child: Row(
             children: <Widget>[
               Icon(
-                  user.userInfo[index].status
+                  devicesToShow[index].status == "正常"
                       ? Icons.notifications_off
                       : Icons.notifications_active,
                   color:
-                  user.userInfo[index].status ? Colors.red : Colors.green),
-              Text(user.userInfo[index].status ? 'Disabled' : 'Active')
+                  devicesToShow[index].status == "正常" ? Colors.red : Colors.green),
+              Text(devicesToShow[index].status == "正常" ? 'Disabled' : 'Active')
             ],
           ),
           width: 100,
@@ -255,50 +223,36 @@ class _LedgerQueryState extends State<LedgerQuery> {
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
-        // Container(
-        //   child: Text(user.userInfo[index].phone),
-        //   width: 200,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
-        // Container(
-        //   child: Text(user.userInfo[index].registerDate),
-        //   width: 100,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
-        // Container(
-        //   child: Text(user.userInfo[index].terminationDate),
-        //   width: 200,
-        //   height: 52,
-        //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-        //   alignment: Alignment.centerLeft,
-        // ),
         Container(
-          child: Text(user.userInfo[index].a),
-          width: 200,
+          child: Text(devicesToShow[index].manufacturer),
+          width: 180,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].b),
+          child: Text(devicesToShow[index].location),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].c),
+          child: Text(devicesToShow[index].principal),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].d),
+          child: Text(devicesToShow[index].verificationCategory),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: Text(devicesToShow[index].effectiveDate),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -306,7 +260,20 @@ class _LedgerQueryState extends State<LedgerQuery> {
         ),
         Container(
           child: ElevatedButton(
-            child: Text("Open PDF"),
+            child: Text("管理标签"),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+            ),
+          ),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
+        ),
+        Container(
+          child: ElevatedButton(
+            child: Text("检验标签"),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
@@ -323,68 +290,6 @@ class _LedgerQueryState extends State<LedgerQuery> {
   }
 }
 
-
-// 以下定义User也是用于测试表格
-User user = User();
-
-class User {
-  List<UserInfo> userInfo = [];
-
-  void initData(int size) {
-    for (int i = 0; i < size; i++) {
-      userInfo.add(UserInfo(
-          "器具_$i", i % 3 == 0, '压力表', 'Sinkow', '热水锅炉', 'A'));
-    }
-    // 添加几个不是压力表不是A类的数据进行测试
-    userInfo.add(UserInfo("test1", true, '111', '111', '111', 'B'));
-    userInfo.add(UserInfo("test2", true, '112', '222', '222', 'B'));
-    userInfo.add(UserInfo("test3", true, '223', '222', '222', 'C'));
-  }
-
-  ///
-  /// Single sort, sort Name's id
-  void sortName(bool isAscending) {
-    userInfo.sort((a, b) {
-      int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
-      int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
-      return (aId - bId) * (isAscending ? 1 : -1);
-    });
-  }
-
-  ///
-  /// sort with Status and Name as the 2nd Sort
-  void sortStatus(bool isAscending) {
-    userInfo.sort((a, b) {
-      if (a.status == b.status) {
-        int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
-        int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
-        return (aId - bId);
-      } else if (a.status) {
-        return isAscending ? 1 : -1;
-      } else {
-        return isAscending ? -1 : 1;
-      }
-    });
-  }
-}
-
-class UserInfo {
-  String name;
-  bool status;
-  // String phone;
-  // String registerDate;
-  // String terminationDate;
-
-  String a;
-  String b;
-  String c;
-  String d;
-
-  UserInfo(this.name, this.status, this.a, this.b, this.c, this.d);
-
-// UserInfo(this.name, this.status, this.phone, this.registerDate,
-//     this.terminationDate);
-}
 // ignore: must_be_immutable   PDF界面
 class PDFScreen extends StatelessWidget {
   String pathPDF = "";

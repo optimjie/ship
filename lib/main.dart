@@ -11,11 +11,13 @@ import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Ledger.dart';
 import 'package:ship/model/Tree.dart';
 import 'package:ship/model/User.dart';
+import 'package:ship/model/Device.dart';
 import 'package:ship/widget/Query.dart';
 import 'package:ship/widget/QueryNoSet.dart';
 
 // nox_adb.exe connect 127.0.0.1:62001
 // flutter run --no-sound-null-safety
+// adb shell data/data
 // 静态stss 动态stf
 
 void main() {
@@ -51,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   late List<User> users;
 
+  late List<Device> devices = [];
+
   GlobalKey _key = GlobalKey<FormState>();
   TextEditingController _user = TextEditingController();
   TextEditingController _pass = TextEditingController();
@@ -80,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await ShipDatabase.instance.treeQueryById(1);
     } on Exception {
       print("没有根结点需要创建");
+      
       await ShipDatabase.instance.treeInsert(Tree(treeid: "1", treepid: "-1", name: "root", shipname: "shipname"));
     }
 
@@ -90,24 +95,24 @@ class _MyHomePageState extends State<MyHomePage> {
       await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
     }
 
-    // 测试
+    // ==========测试数据，只要第一次需要 =======st  后期只在第一次运行软件时插入数据
+    // this.devices = createTmpDeviceData();
+    // for (int i = 0; i < this.devices.length; i++) {
+    //   await ShipDatabase.instance.deviceInsert(devices[i]);
+    // }
+
     // await ShipDatabase.instance.userInsert(User(name: "test", password: "test", level: "2"));
 
-    // this.trees = createTmpTreeData();  // 只有第一次需要
-
-    // 将测试数据存到数据库中
-
-    //await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
-
+    // this.trees = createTmpTreeData();  
     // for (int i = 0; i < trees.length; i++) {
     //   dynamic treeid = trees[i].getId();
     //   dynamic treepid = trees[i].getParentId();
     //   dynamic name = trees[i].name;
     //   dynamic shipname = trees[i].shipname;
-    //   Tree t = Tree(
-    //     treeid: treeid, treepid: treepid, name: name, shipname: shipname);
+    //   Tree t = Tree(treeid: treeid, treepid: treepid, name: name, shipname: shipname);
     //   await ShipDatabase.instance.treeInsert(t);
     // }
+    // ==========测试数据，只要第一次需要 =======ed
 
     // =====测试台账==== st
     // for (int i = 0; i < 12; i++) {
@@ -129,7 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     this.trees = await ShipDatabase.instance.treeQueryAll();
     this.users = await ShipDatabase.instance.userQueryAll();
+    this.devices = await ShipDatabase.instance.deviceQueryAll();
 
+    print("devices len:" + devices.length.toString());
     print("users len:" + users.length.toString());
     for (int i = 0; i < users.length; i++) {
       print(users[i].id.toString() + " " + 
@@ -255,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context, 
                   level == 1 ? 
                   MaterialPageRoute(builder: (ctx) => Query(
-                    treeListShow: this.treeListShow)
+                    treeListShow: this.treeListShow, devices: this.devices)
                   )
                   :
                   MaterialPageRoute(builder: (ctx) => QueryNoSet(
