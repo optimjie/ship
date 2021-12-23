@@ -183,6 +183,11 @@ class _LedgerQueryState extends State<LedgerQuery> {
     ];
   }
 
+  bool warn(String date){
+    return DateTime.parse(date).difference(DateTime.now()).inDays<30;
+
+
+  }
   Widget _getTitleItemWidget(String label, double width) {
     return Container(
       child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
@@ -210,12 +215,12 @@ class _LedgerQueryState extends State<LedgerQuery> {
           child: Row(
             children: <Widget>[
               Icon(
-                  devicesToShow[index].status == "正常"
+                  devicesToShow[index].status != "正常"
                       ? Icons.notifications_off
                       : Icons.notifications_active,
                   color:
-                  devicesToShow[index].status == "正常" ? Colors.red : Colors.green),
-              Text(devicesToShow[index].status == "正常" ? 'Disabled' : 'Active')
+                  devicesToShow[index].status != "正常" ? Colors.red : Colors.green),
+              Text(devicesToShow[index].status != "正常" ? 'Disabled' : 'Active')
             ],
           ),
           width: 100,
@@ -224,7 +229,7 @@ class _LedgerQueryState extends State<LedgerQuery> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(devicesToShow[index].manufacturer),
+          child: Text(devicesToShow[index].manufacturer!=null ? devicesToShow[index].manufacturer:"——"),
           width: 180,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -252,7 +257,10 @@ class _LedgerQueryState extends State<LedgerQuery> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(devicesToShow[index].effectiveDate),
+          child: Text(devicesToShow[index].effectiveDate,
+              style: TextStyle(
+                color: warn(devicesToShow[index].effectiveDate)? Colors.red: Colors.black,
+                )),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),

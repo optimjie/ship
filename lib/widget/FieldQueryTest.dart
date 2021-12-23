@@ -137,9 +137,12 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
             centerTitle: true,
           ),
           body: Row(
-            children: [
-              Column(
-                  children:[ DynamicTreeView(
+            children: [Expanded(
+                flex: 1,
+                child:Column(
+                  children: <Widget>[
+                    Expanded(
+                        child: DynamicTreeView(
                     data: treeListShow,
 
                     config: Config(
@@ -169,10 +172,12 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                       );*/
                     },
                     width: 210.0,
-                  ),]
+                  ),
               ),
+             ])),
+
               Expanded(
-                flex: 4,
+                flex: 5,
                 child:Column(
                   children: <Widget>[
                 Row(
@@ -188,7 +193,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                          context, MaterialPageRoute(builder: (ctx) => LedgerQuery(treeListShow: this.treeListShow, devices: [],))
+                          context, MaterialPageRoute(builder: (ctx) => LedgerQuery(treeListShow: this.treeListShow, devices: allDevices,))
                       );
                     },
                     child: Text('台账查询'),
@@ -272,7 +277,11 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
       alignment: Alignment.centerLeft,
     );
   }
+  bool warn(String date){
+    return DateTime.parse(date).difference(DateTime.now()).inDays<30;
 
+
+  }
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
     return new Row(//y用Row会导致超出屏幕范围出bug，百度用expand暂未成功
       children: <Widget>[
@@ -322,7 +331,10 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(allDevices[index].effectiveDate),
+          child: Text(allDevices[index].effectiveDate,
+            style: TextStyle(
+            color: warn(allDevices[index].effectiveDate)? Colors.red: Colors.black,
+            )),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
