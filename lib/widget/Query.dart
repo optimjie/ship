@@ -10,13 +10,16 @@ import 'FieldQuery.dart';
 import 'LedgerQuery.dart';
 import 'Settings.dart';
 import 'FieldQueryTest.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 class Query extends StatelessWidget {
 
   final List<BaseData> treeListShow;
   final List<Device> devices;
 
   const Query({Key? key, required this.treeListShow, required this.devices}) : super(key: key);
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +68,7 @@ class Query extends StatelessWidget {
               child: Text("Open PDF"),
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+                MaterialPageRoute(builder: (context) => PDFScreen("/sdcard/Documents/1.pdf")),
               ),
             ),
             MaterialButton(
@@ -89,6 +92,10 @@ class Query extends StatelessWidget {
       )
     );
   }
+
+
+
+
 }
 
 // ignore: must_be_immutable
@@ -100,7 +107,7 @@ class PDFScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PDFViewerScaffold(
       appBar: AppBar(
-        title: Text("Document"),
+        title: Text("返回"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),

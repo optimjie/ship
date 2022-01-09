@@ -1,5 +1,6 @@
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ship/model/Device.dart';
 
 import 'Query.dart';
@@ -32,6 +33,31 @@ class _LoginState extends State<Login> {
     _p.dispose();
     if (_focusScopeNode != null) _focusScopeNode.dispose();
   }
+  @override
+  void initState() {
+    super.initState();
+    checkPermisson();
+    super.initState();
+  }
+  void checkPermisson() async {
+    //当前权限
+    Permission permission = Permission.storage;
+    //权限的状态
+    PermissionStatus status = await permission.status;
+    print("进来了");
+    if(status.isDenied){
+      //第一次申请用户拒绝
+      print("拒绝");
+      permission.request();
+    }else if(status.isPermanentlyDenied){
+      //用户点击了 拒绝且不再提示
+      permission.request();
+    }else{
+      //权限通过
+      permission.request();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,4 +111,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+
 }

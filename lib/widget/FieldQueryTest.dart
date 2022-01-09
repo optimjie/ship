@@ -4,6 +4,7 @@ import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ship/db/ShipDatabase.dart';
 import 'package:ship/model/Device.dart';
 import 'package:ship/model/Tree.dart';
@@ -53,6 +54,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
     super.initState();
     // 这里的全部数据应该从数据库中获取
     user.initData(3);
+    checkPermisson();
     getDevice();
     all.clear();
     all = user.userInfo;
@@ -64,7 +66,21 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
     // }
     super.initState();
   }
+  void checkPermisson() async {
+    //当前权限
+    Permission permission = Permission.storage;
+    //权限的状态
+    PermissionStatus status = await permission.status;
 
+
+    if(status.isDenied){
+      status = await permission.request();
+    }else if(status.isPermanentlyDenied){
+      status = await permission.request();
+    }else{
+      status = await permission.request();
+    }
+  }
   //_表格
 
   @override
@@ -345,7 +361,8 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
             child: Text("检验报告"),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+             // MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+              MaterialPageRoute(builder: (context) => PDFScreen("/sdcard/Documents/1.pdf")),
             ),
           ),
           width: 100,
