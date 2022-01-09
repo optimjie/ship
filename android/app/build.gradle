@@ -41,26 +41,30 @@ android {
         versionName flutterVersionName
     }
 
-    buildTypes {
+    /*buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
-    }
+    }*/
 
     signingConfigs {
         release {
-            keyAlias 'sign'
-            keyPassword '020036'
-            storeFile file('key/sign.jks')
-            storePassword '020036'
+            keyAlias 'key'
+            keyPassword '123456'
+            storeFile file('key/Key.jks')
+            storePassword '123456'
         }
     }
 
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            minifyEnabled true
+            useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -73,4 +77,7 @@ android {
 
 flutter {
     source '../..'
+}
+dependencies {
+    implementation files('libs/sunjce_provider.jar')
 }
