@@ -305,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
               } else if (!passwdIsCorrect) {
                 hint = "密码错误";
               }
-
+              print("tree:"+this.treeListShow.length.toString());
               if (!userIsExist || !passwdIsCorrect) {
                 // 弹窗提示
                 showDialog(

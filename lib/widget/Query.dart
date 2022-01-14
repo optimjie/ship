@@ -55,14 +55,14 @@ class Query extends StatelessWidget {
               },
               child: Text('台账查询'),
             ),
-            /*ElevatedButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context, MaterialPageRoute(builder: (ctx) => FieldQuery(treeListShow: this.treeListShow))
                 );
               },
               child: Text('实地查询'),
-            ),*/
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(

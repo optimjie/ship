@@ -56,6 +56,7 @@ class _FieldQueryTestState extends State<FieldQueryTest> {
     user.initData(3);
     checkPermisson();
     getDevice();
+    print("test:  "+this.treeListShow.length.toString());
     all.clear();
     all = user.userInfo;
     // for (int i = 0; i < all.length; i++) {

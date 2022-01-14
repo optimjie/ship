@@ -99,7 +99,7 @@ class ShipDatabase {
       )
     ''');
 
-    //创建设备表
+    /*//创建设备表
     await db.execute('''
       CREATE TABLE $tableDevice ( 
         ${DevicesFields.id} $idType, 
@@ -127,7 +127,7 @@ class ShipDatabase {
         ${DevicesFields.abc} $textType
         ${DevicesFields.menuId} $textType
       )
-    ''');
+    ''');*/
 
   }
 
