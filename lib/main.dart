@@ -15,7 +15,16 @@ import 'package:ship/model/User.dart';
 import 'package:ship/model/Device.dart';
 import 'package:ship/widget/Query.dart';
 import 'package:ship/widget/QueryNoSet.dart';
-
+//pdf
+import 'dart:typed_data';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:dynamic_treeview/dynamic_treeview.dart';
+//-pdf
 // nox_adb.exe connect 127.0.0.1:62001
 // flutter run --no-sound-null-safety
 // adb shell data/data
@@ -78,6 +87,27 @@ class _MyHomePageState extends State<MyHomePage> {
     _pass.dispose();
     _u.dispose();
     _p.dispose();
+  }
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
+
+
+  Future<File> createFileOfPdfUrl() async {
+    //final url = "http://africau.edu/images/default/sample.pdf";
+    final filename = 'test2.pdf';
+    //var request = await HttpClient().getUrl(Uri.parse(url));
+    //var response = await request.close();
+    var bytes = await rootBundle.load("assets/1.pdf");
+
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes,'$dir/$filename');
+    File file = new File('$dir/$filename');
+    //await file.writeAsBytes(bytes);
+
+    return file;
   }
 
   void init() async {
@@ -261,6 +291,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 }
               }
+
+              //pdf
+              createFileOfPdfUrl().then((f) {
+                print(f.path.toString()+" sdf");
+
+              });
+              //-pdf
 
               String hint = "";
               if (!userIsExist) {

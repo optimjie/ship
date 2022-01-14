@@ -1,8 +1,16 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:typed_data';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
+
 import 'package:dynamic_treeview/dynamic_treeview.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:ship/model/Device.dart';
 import 'package:ship/widget/FieldQuery.dart';
 
@@ -15,7 +23,6 @@ class Query extends StatelessWidget {
 
   final List<BaseData> treeListShow;
   final List<Device> devices;
-
   const Query({Key? key, required this.treeListShow, required this.devices}) : super(key: key);
 
 
@@ -32,14 +39,14 @@ class Query extends StatelessWidget {
       body: Center(
         child: Column (
           children: <Widget>[
-            ElevatedButton(
+            /*ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context, MaterialPageRoute(builder: (ctx) => Settings(treeListShow: this.treeListShow))
                 );
               },
               child: Text('设置'),
-            ),
+            ),*/
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -48,30 +55,30 @@ class Query extends StatelessWidget {
               },
               child: Text('台账查询'),
             ),
-            ElevatedButton(
+            /*ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context, MaterialPageRoute(builder: (ctx) => FieldQuery(treeListShow: this.treeListShow))
                 );
               },
               child: Text('实地查询'),
-            ),
+            ),*/
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (ctx) => FieldQueryTest(treeListShow: this.treeListShow))
                 );
               },
-              child: Text('实地查询测试'),
+              child: Text('实地查询'),
             ),
-            ElevatedButton(
+            /*ElevatedButton(
               child: Text("Open PDF"),
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PDFScreen("/sdcard/Documents/1.pdf")),
+                MaterialPageRoute(builder: (context) => PDFScreen("/data/user/0/com.example.ship/app_flutter/test2.pdf")),
               ),
-            ),
-            MaterialButton(
+            ),*/
+            /*MaterialButton(
               color: Colors.blue,
               child: new Text('点我'),
               onPressed: () {
@@ -83,17 +90,42 @@ class Query extends StatelessWidget {
                 List<String>  sj=moonLanding.difference(now).toString().split(":");
                 print(sj[2]);
                 print(moonLanding.difference(now).inDays<30);
-
+                PDFScreen("/data/user/0/com.example.ship/app_flutter/test.pdf");
+                // createFileOfPdfUrl().then((f) {
+                //   print(f.path.toString()+"sdf");
+                //   PDFScreen(f.path);
+                //
+                // });
 
               },
-            ),
+            ),*/
           ]
         )
       )
     );
   }
 
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
 
+
+  Future<File> createFileOfPdfUrl() async {
+    //final url = "http://africau.edu/images/default/sample.pdf";
+    final filename = 'test.pdf';
+    //var request = await HttpClient().getUrl(Uri.parse(url));
+    //var response = await request.close();
+    var bytes = await rootBundle.load("assets/1.pdf");
+
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes,'$dir/$filename');
+    File file = new File('$dir/$filename');
+    //await file.writeAsBytes(bytes);
+
+    return file;
+  }
 
 
 }

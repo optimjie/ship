@@ -271,7 +271,7 @@ class _LedgerQueryState extends State<LedgerQuery> {
             child: Text("管理标签"),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+              MaterialPageRoute(builder: (context) => PDFScreen("/data/user/0/com.example.ship/app_flutter/test2.pdf")),
             ),
           ),
           width: 100,
@@ -284,7 +284,7 @@ class _LedgerQueryState extends State<LedgerQuery> {
             child: Text("检验标签"),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PDFScreen("/data/data/com.example.ship/files/2.pdf")),
+              MaterialPageRoute(builder: (context) => PDFScreen("/data/user/0/com.example.ship/app_flutter/test2.pdf")),
             ),
           ),
           width: 100,
