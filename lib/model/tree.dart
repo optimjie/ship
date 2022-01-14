@@ -111,16 +111,72 @@ List<Tree> createTmpTreeData() {
     // Tree(id: 9, treeid: "0005", treepid: "011", name: "机舱电汽热水柜", shipname: "胜利503船"),
     // Tree(id: 10, treeid: "0006", treepid: "011", name:  "机舱海水柜", shipname: "胜利503船"),
 
+    // Tree(id: 1, treeid: "1", treepid: "-1", name: "root", shipname: "root"),
+    // Tree(id: 2, treeid: "050300000", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
+    // Tree(id: 3, treeid: "050310000", treepid: "050300000", name: "机舱", shipname: "胜利503船"),
+    // Tree(id: 4, treeid: "050310001", treepid: "050300000", name: "甲板", shipname: "胜利503船"),
+    // Tree(id: 5, treeid: "050320000", treepid: "050310000", name: "机舱气瓶本体", shipname: "胜利503船"),
+    // Tree(id: 6, treeid: "050320001", treepid: "050310000", name: "机舱二号气瓶", shipname: "胜利503船"),
+    // Tree(id: 7, treeid: "050320002", treepid: "050310000", name: "机舱杂用气瓶", shipname: "胜利503船"),
+    // Tree(id: 8, treeid: "050320003", treepid: "050310000", name: "机舱一号气瓶", shipname: "胜利503船"),
+    // Tree(id: 9, treeid: "050320004", treepid: "050310000", name: "机舱电汽热水柜", shipname: "胜利503船"),
+    // Tree(id: 10, treeid: "050320005", treepid: "050310000", name: "机舱海水柜", shipname: "胜利503船"),
+
     Tree(id: 1, treeid: "1", treepid: "-1", name: "root", shipname: "root"),
-    Tree(id: 2, treeid: "050300000", treepid: "1", name: "胜利503船", shipname: "胜利503船"),
-    Tree(id: 3, treeid: "050310000", treepid: "050300000", name: "机舱", shipname: "胜利503船"),
-    Tree(id: 4, treeid: "050310001", treepid: "050300000", name: "甲板", shipname: "胜利503船"),
-    Tree(id: 5, treeid: "050320000", treepid: "050310000", name: "机舱气瓶本体", shipname: "胜利503船"),
-    Tree(id: 6, treeid: "050320001", treepid: "050310000", name: "机舱二号气瓶", shipname: "胜利503船"),
-    Tree(id: 7, treeid: "050320002", treepid: "050310000", name: "机舱杂用气瓶", shipname: "胜利503船"),
-    Tree(id: 8, treeid: "050320003", treepid: "050310000", name: "机舱一号气瓶", shipname: "胜利503船"),
-    Tree(id: 9, treeid: "050320004", treepid: "050310000", name: "机舱电汽热水柜", shipname: "胜利503船"),
-    Tree(id: 10, treeid: "050320005", treepid: "050310000", name: "机舱海水柜", shipname: "胜利503船"),
+    Tree(id: 3, treeid: "050300000", treepid: "050300000", name: "胜利505", shipname: "胜利503船"),
+    Tree(id: 4, treeid: "050310000", treepid: "050300000", name: "艏侧推舱", shipname: "胜利503船"),
+    Tree(id: 8, treeid: "050310001", treepid: "050300000", name: "应急消防泵舱", shipname: "胜利503船"),
+    Tree(id: 11, treeid: "050310002", treepid: "050300000", name: "集控室", shipname: "root"),
+    Tree(id: 12, treeid: "050310003", treepid: "050300000", name: "主机舱", shipname: "胜利503船"),
+    Tree(id: 13, treeid: "050310004", treepid: "050300000", name: "机修间旁", shipname: "胜利503船"),
+    Tree(id: 14, treeid: "050310005", treepid: "050300000", name: "轴隧", shipname: "胜利503船"),
+    Tree(id: 15, treeid: "050310006", treepid: "050310000", name: "艉侧推舱", shipname: "胜利503船"),
+    Tree(id: 16, treeid: "050310007", treepid: "050310000", name: "舵机舱", shipname: "胜利503船"),
+    Tree(id: 17, treeid: "050320000", treepid: "050310003", name: "左前", shipname: "胜利503船"),
+    Tree(id: 18, treeid: "050320001", treepid: "050310003", name: "右前", shipname: "胜利503船"),
+    Tree(id: 19, treeid: "050320002", treepid: "050310003", name: "前中", shipname: "胜利503船"),
+    Tree(id: 20, treeid: "050320003", treepid: "050310003", name: "后中", shipname: "胜利503船"),
+    Tree(id: 21, treeid: "050320004", treepid: "050310003", name: "左后", shipname: "root"),
+    Tree(id: 22, treeid: "050320005", treepid: "050310003", name: "右后", shipname: "胜利503船"),
+    Tree(id: 23, treeid: "050320006", treepid: "050310005", name: "左前", shipname: "胜利503船"),
+    Tree(id: 24, treeid: "050320007", treepid: "050310005", name: "左后", shipname: "胜利503船"),
+    Tree(id: 25, treeid: "050320008", treepid: "050310005", name: "右前", shipname: "胜利503船"),
+    Tree(id: 26, treeid: "050320009", treepid: "050310005", name: "右后", shipname: "胜利503船"),
+    Tree(id: 27, treeid: "050320010", treepid: "050310007", name: "入口", shipname: "胜利503船"),
+    Tree(id: 28, treeid: "050320011", treepid: "050310007", name: "左舵机", shipname: "胜利503船"),
+    Tree(id: 29, treeid: "050320012", treepid: "050310007", name: "右舵机", shipname: "胜利503船"),
+    Tree(id: 30, treeid: "050320013", treepid: "050310003", name: "左辅机", shipname: "胜利503船"),
+    Tree(id: 31, treeid: "050320014", treepid: "050310003", name: "右辅机", shipname: "胜利503船"),
+    Tree(id: 32, treeid: "050320015", treepid: "050310003", name: "左主机", shipname: "胜利503船"),
+    Tree(id: 33, treeid: "050320016", treepid: "050310003", name: "右主机", shipname: "胜利503船"),
+
+    // INSERT INTO "tree" VALUES (1, 1, -1, 'root', 'shipname');
+    // INSERT INTO "tree" VALUES (3, '050300000', 1, '胜利505', 'dddd');
+    // INSERT INTO "tree" VALUES (4, '050310000', '050300000', '艏侧推舱', 'shipname');
+    // INSERT INTO "tree" VALUES (8, '050310001', '050300000', '应急消防泵舱', 'shipname');
+    // INSERT INTO "tree" VALUES (11, '050310002', '050300000', '集控室', 'shipname');
+    // INSERT INTO "tree" VALUES (12, '050310003', '050300000', '主机舱', 'shipname');
+    // INSERT INTO "tree" VALUES (13, '050310004', '050300000', '机修间旁', 'shipname');
+    // INSERT INTO "tree" VALUES (14, '050310005', '050300000', '轴隧', 'shipname');
+    // INSERT INTO "tree" VALUES (15, '050310006', '050300000', '艉侧推舱', 'shipname');
+    // INSERT INTO "tree" VALUES (16, '050310007', '050300000', '舵机舱', 'shipname');
+    // INSERT INTO "tree" VALUES (17, '050320000', '050310003', '左前', 'shipname');
+    // INSERT INTO "tree" VALUES (18, '050320001', '050310003', '右前', 'shipname');
+    // INSERT INTO "tree" VALUES (19, '050320002', '050310003', '前中', 'shipname');
+    // INSERT INTO "tree" VALUES (20, '050320003', '050310003', '后中', 'shipname');
+    // INSERT INTO "tree" VALUES (21, '050320004', '050310003', '左后', 'shipname');
+    // INSERT INTO "tree" VALUES (22, '050320005', '050310003', '右后', 'shipname');
+    // INSERT INTO "tree" VALUES (23, '050320006', '050310005', '左前', 'shipname');
+    // INSERT INTO "tree" VALUES (24, '050320007', '050310005', '左后', 'shipname');
+    // INSERT INTO "tree" VALUES (25, '050320008', '050310005', '右前', 'shipname');
+    // INSERT INTO "tree" VALUES (26, '050320009', '050310005', '右后', 'shipname');
+    // INSERT INTO "tree" VALUES (27, '050320010', '050310007', '入口', 'shipname');
+    // INSERT INTO "tree" VALUES (28, '050320011', '050310007', '左舵机', 'shipname');
+    // INSERT INTO "tree" VALUES (29, '050320012', '050310007', '右舵机', 'shipname');
+    // INSERT INTO "tree" VALUES (30, '050320013', '050310003', '左辅机', 'shipname');
+    // INSERT INTO "tree" VALUES (31, '050320014', '050310003', '右辅机', 'shipname');
+    // INSERT INTO "tree" VALUES (32, '050320015', '050310003', '左主机', 'shipname');
+    // INSERT INTO "tree" VALUES (33, '050320016', '050310003', '右主机', 'shipname');
 
 
     /*

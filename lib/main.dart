@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:ship/ScreenOne.dart';
 import 'package:ship/ScreenTwo.dart';
 // ignore: unused_import
@@ -80,6 +80,26 @@ class _MyHomePageState extends State<MyHomePage> {
     _p.dispose();
   }
 
+  void init() async {
+    await ShipDatabase.instance.userInsert(User(name: "test", password: "test", level: "2"));
+
+    this.devices = createTmpDeviceData();
+    for (int i = 0; i < this.devices.length; i++) {
+      // print("devices" + i.toString());
+      await ShipDatabase.instance.deviceInsert(devices[i]);
+    }
+
+    this.trees = createTmpTreeData();  
+    for (int i = 0; i < trees.length; i++) {
+      dynamic treeid = trees[i].getId();
+      dynamic treepid = trees[i].getParentId();
+      dynamic name = trees[i].name;
+      dynamic shipname = trees[i].shipname;
+      Tree t = Tree(treeid: treeid, treepid: treepid, name: name, shipname: shipname);
+      await ShipDatabase.instance.treeInsert(t);
+    }
+  }
+
   Future refreshTrees() async {
 
     try {
@@ -95,6 +115,25 @@ class _MyHomePageState extends State<MyHomePage> {
     } on Exception {
       print("没有超级管理员需要创建");
       await ShipDatabase.instance.userInsert(User(name: "admin", password: "admin", level: "1"));
+      // this.init();
+
+      await ShipDatabase.instance.userInsert(User(name: "test", password: "test", level: "2"));
+
+      this.devices = createTmpDeviceData();
+      for (int i = 0; i < this.devices.length; i++) {
+        // print("devices" + i.toString());
+        await ShipDatabase.instance.deviceInsert(devices[i]);
+      }
+
+      this.trees = createTmpTreeData();  
+      for (int i = 0; i < trees.length; i++) {
+        dynamic treeid = trees[i].getId();
+        dynamic treepid = trees[i].getParentId();
+        dynamic name = trees[i].name;
+        dynamic shipname = trees[i].shipname;
+        Tree t = Tree(treeid: treeid, treepid: treepid, name: name, shipname: shipname);
+        await ShipDatabase.instance.treeInsert(t);
+      }
     }
 
     // ==========测试数据，只要第一次需要 =======st  后期只在第一次运行软件时插入数据
